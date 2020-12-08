@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="512"
+   height="512"
+   viewBox="0 0 135.46667 135.46667"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="logo_gartenwert_blau.svg"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2"
+     inkscape:cx="311.88959"
+     inkscape:cy="249.51705"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1920"
+     inkscape:window-height="1031"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     units="px">
+    <inkscape:grid
+       type="xygrid"
+       id="grid971"
+       spacingx="4.2333334"
+       spacingy="4.2333334"
+       empspacing="4"
+       dotted="false" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(4.4978889,-35.591667)">
+    <path
+       style="fill:#007bff;fill-opacity:1;stroke-width:0.18184613"
+       d="m 38.356583,48.941433 a 15.09323,15.09323 0 0 0 -13.221138,7.816899 15.09323,15.09323 0 0 0 -4.599784,-0.724899 15.09323,15.09323 0 0 0 -15.09323,15.09323 15.09323,15.09323 0 0 0 8.852569,13.726545 15.09323,15.09323 0 0 0 -0.487646,3.730685 15.09323,15.09323 0 0 0 15.09323,15.093227 15.09323,15.09323 0 0 0 10.736737,-4.503522 15.09323,15.09323 0 0 0 10.357416,4.139842 15.09323,15.09323 0 0 0 15.09323,-15.093239 15.09323,15.09323 0 0 0 -0.761129,-4.672947 15.09323,15.09323 0 0 0 8.034965,-13.32982 15.09323,15.09323 0 0 0 -15.093221,-15.093232 15.09323,15.09323 0 0 0 -5.936636,1.234921 15.09323,15.09323 0 0 0 -12.975363,-7.41769 z"
+       id="path815"
+       inkscape:connector-curvature="0" />
+    <rect
+       style="fill:#007bff;fill-opacity:1;stroke-width:0.29925486"
+       id="rect851"
+       width="79.552582"
+       height="70.132004"
+       x="204.66273"
+       y="192.21419"
+       transform="matrix(1,0,-0.7972695,0.60362351,0,0)" />
+    <path
+       style="fill:#adb5bd;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.20550662px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 28.045862,149.89167 5.150853,-63.500002 h 13.609937 l 5.316293,63.500002 z"
+       id="path861"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc" />
+    <rect
+       style="fill:#adb5bd;fill-opacity:1;stroke:none;stroke-width:0.20531477"
+       id="rect893"
+       width="50.800007"
+       height="33.866665"
+       x="71.70211"
+       y="86.39167" />
+    <rect
+       style="fill:#adb5bd;fill-opacity:1;stroke:none;stroke-width:0.15099384"
+       id="rect905"
+       width="33.024433"
+       height="33.024433"
+       x="-20.68862"
+       y="114.10046"
+       transform="matrix(0.76759124,-0.64093969,0.76759124,0.64093969,0,0)" />
+    <rect
+       style="fill:#007bff;fill-opacity:1;stroke-width:0.11311951"
+       id="rect853"
+       width="12.700005"
+       height="25.664589"
+       x="80.168777"
+       y="94.858337" />
+    <rect
+       style="fill:#007bff;fill-opacity:1;stroke-width:0.07957418"
+       id="rect853-3"
+       width="12.699999"
+       height="12.700002"
+       x="101.33545"
+       y="94.858337" />
+  </g>
+</svg>
