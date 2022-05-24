@@ -375,20 +375,19 @@
             <tr v-if="!g.alternativ" :key="gi2">
             <td> {{g.art}} </td>
             <td style="text-align:right">
-              {{g.normalherstellungswert.toLocaleString("de-DE", 
+              {{g.normalherstellungswert.toLocaleString("de-DE",
                 {minimumFractionDigits: 2})}}
             </td>
             <td> x </td>
             <td style="text-align:right"> {{g.flaeche}} m² </td>
             <td> x </td>
-            <td style="text-align:right"> 
-              {{wep.baukostenindex.toLocaleString("de-DE", 
-                {minimumFractionDigits: 3})}} 
+            <td style="text-align:right">
+              {{wep.baukostenindex.toLocaleString("de-DE",
+                {minimumFractionDigits: 3})}}
             </td>
             <td> = </td>
             <td style="text-align:right">
-              {{ Number.parseFloat(neuwert(g)).toLocaleString("de-DE", 
-                {minimumFractionDigits: 2, maximumFractionDigits: 2}) }} €
+              {{ formatEuro(neuwert(g)) }}
             </td>
             <td> - </td>
             <td style="text-align:right">
@@ -397,8 +396,7 @@
             </td>
             <td> = </td>
             <td style="text-align:right">
-              {{zeitwert(g).toLocaleString("de-DE", 
-                {minimumFractionDigits: 2, maximumFractionDigits: 2}) }} €
+              {{ formatEuro(zeitwert(g)) }}
             </td>
             </tr>
           </template>
@@ -440,20 +438,19 @@
               <tr v-if="g.alternativ" :key="gi3">
                 <td> {{g.art}} </td>
                 <td style="text-align:right">
-                  {{g.normalherstellungswert.toLocaleString("de-DE", 
+                  {{g.normalherstellungswert.toLocaleString("de-DE",
                     {minimumFractionDigits: 2})}}
                 </td>
                 <td> x </td>
                 <td style="text-align:right"> {{g.flaeche}} m² </td>
                 <td> x </td>
-                <td style="text-align:right"> 
-                  {{wep.baukostenindex.toLocaleString("de-DE", 
-                    {minimumFractionDigits: 3})}} 
+                <td style="text-align:right">
+                  {{wep.baukostenindex.toLocaleString("de-DE",
+                    {minimumFractionDigits: 3})}}
                 </td>
                 <td> = </td>
                 <td style="text-align:right">
-                  {{ Number.parseFloat(neuwert(g)).toLocaleString("de-DE", 
-                    {minimumFractionDigits: 2, maximumFractionDigits: 2}) }} €
+                  {{ formatEuro(neuwert(g)) }}
                 </td>
                 <td> x </td>
                 <td style="text-align:right">
@@ -461,8 +458,7 @@
                 </td>
                 <td> = </td>
                 <td style="text-align:right">
-                  {{restwert(g).toLocaleString("de-DE", 
-                    {minimumFractionDigits: 2, maximumFractionDigits: 2}) }} €
+                  {{ formatEuro(restwert(g)) }}
                 </td>
               </tr>
             </template>
@@ -473,8 +469,7 @@
             <td colspan="7"></td>
             <td colspan="4" style="padding-top:3mm;">Gesamtsumme Baulichkeiten</td>
             <td style="text-align:right; font-weight:bold; padding-top:3mm;">
-              {{ gesamtsummeBau.toLocaleString("de-DE", 
-                 {minimumFractionDigits: 2, maximumFractionDigits: 2})}} €
+              {{ formatEuro(gesamtsummeBau) }}
             </td>
           </tr>
         </tbody>
@@ -496,7 +491,7 @@
             <th style="border-bottom-style:none">Grundpreis</th>
             <th style="border-bottom-style:none">Wertmind.</th>
             <th style="border-bottom-style:none">Endpreis</th>
-          </tr>  
+          </tr>
           <tr>
             <th style="border-top-style:none"></th>
             <th style="border-top-style:none"></th>
@@ -514,12 +509,11 @@
             <td style="text-align:center"> {{v.einheit}} </td>
             <td> {{v.kriterien}} </td>
             <td style="text-align:right">
-              {{v.grundpreis.toLocaleString("de-DE", {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}&nbsp;€
+              {{ formatEuro(v.grundpreis) }}
             </td>
             <td style="text-align:right"> {{v.minderung}}&nbsp;% </td>
             <td style="text-align:right">
-              {{(Math.round(v.menge * v.grundpreis * (100-v.minderung))/100)
-                .toLocaleString("de-DE", {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}&nbsp;€
+              {{ formatEuro(wertVorhanden(v)) }}
             </td>
           </tr>
 
@@ -527,11 +521,10 @@
             <td colspan="5" style="padding-top:5mm; text-align:right; border-style:none;">
               Gesamtsumme Nebenanlagen
             </td>
-            <td style="border-style:none;"></td>  
+            <td style="border-style:none;"></td>
             <td style="padding-top:5mm; text-align:right; font-weight:bold; border-style:none;">
-              {{ Number.parseFloat(summeNebenanlagen).toLocaleString("de-DE", 
-                 {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}&nbsp;€
-            </td>  
+              {{ formatEuro(summeNebenanlagen) }}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -552,7 +545,7 @@
             <th style="border-bottom-style:none">Grundpreis</th>
             <th style="border-bottom-style:none">Wertmind.</th>
             <th style="border-bottom-style:none">Endpreis</th>
-          </tr>  
+          </tr>
           <tr>
             <th style="border-top-style:none"></th>
             <th style="border-top-style:none"></th>
@@ -562,7 +555,7 @@
             <th style="border-top-style:none"></th>
             <th style="border-top-style:none"></th>
             <th style="border-top-style:none"></th>
-          </tr>  
+          </tr>
         </thead>
         <tbody>
           <tr v-for="(v, vi2) in wep.vorhanden[1]" :key="vi2">
@@ -571,13 +564,11 @@
             <td style="text-align:center"> {{v.einheit}} </td>
             <td> {{v.kriterien}} </td>
             <td style="text-align:right">
-              {{v.grundpreis.toLocaleString("de-DE",
-                {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}&nbsp;€
+              {{ formatEuro(v.grundpreis) }}
             </td>
             <td style="text-align:right"> {{v.minderung}}&nbsp;% </td>
             <td style="text-align:right">
-              {{(Math.round(v.menge * v.grundpreis * (100-v.minderung))/100)
-                .toLocaleString("de-DE", {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}&nbsp;€
+              {{ formatEuro(wertVorhanden(v)) }}
             </td>
           </tr>
 
@@ -587,16 +578,15 @@
             </td>
             <td style="border-style:none;"></td>  
             <td style="padding-top:5mm; text-align:right; border-style:none;">
-              {{ Number.parseFloat(summeKulturen).toLocaleString("de-DE", 
-                 {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}&nbsp;€
-            </td>  
+              {{ formatEuro(summeKulturen) }}
+            </td>
           </tr><tr>
             <td colspan="5" style="padding-top:3mm; text-align:right; border-style:none;">
               Minderung aufgrund von Pflegerückständen
             </td>
             <td style="padding-top:3mm; text-align:right; border-style:none;">
               {{wep.minderungKulturen}} %
-            </td> 
+            </td>
             <td style="border-style:none;"></td> 
           </tr><tr>
             <td colspan="5" style="text-align:right; border-style:none;">
@@ -604,9 +594,8 @@
             </td>
             <td style="border-style:none;"></td>  
             <td style="text-align:right; font-weight:bold; border-style:none;">
-              {{ geminderteKulturen.toLocaleString("de-DE", 
-                 {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}&nbsp;€
-            </td>  
+              {{ formatEuro(geminderteKulturen) }}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -627,7 +616,7 @@
             <th style="border-bottom-style:none">Grundpreis</th>
             <th style="border-bottom-style:none">Wertmind.</th>
             <th style="border-bottom-style:none">Endpreis</th>
-          </tr>  
+          </tr>
           <tr>
             <th style="border-top-style:none"></th>
             <th style="border-top-style:none"></th>
@@ -637,7 +626,7 @@
             <th style="border-top-style:none"></th>
             <th style="border-top-style:none"></th>
             <th style="border-top-style:none"></th>
-          </tr>  
+          </tr>
         </thead>
         <tbody>
 
@@ -650,13 +639,11 @@
               <td style="text-align:center"> {{v.einheit}} </td>
               <td> {{v.kriterien}} </td>
               <td style="text-align:right">
-                {{v.grundpreis.toLocaleString("de-DE",
-                  {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}&nbsp;€
+                {{ formatEuro(v.grundpreis) }}
               </td>
               <td style="text-align:right"> {{v.minderung}}&nbsp;% </td>
               <td style="text-align:right">
-                {{(Math.round(v.menge * v.grundpreis * (100-v.minderung))/100)
-                  .toLocaleString("de-DE", {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}&nbsp;€
+                {{ formatEuro(wertVorhanden(v)) }}
               </td>
             </tr>
             </template>
@@ -667,9 +654,7 @@
             </td>
             <td></td>
             <td style="text-align:right; font-weight:bold;">
-              {{ Number.parseFloat(this.zwischensummeZiergehoelz)
-              .toLocaleString("de-DE", {minimumFractionDigits: 2,
-               maximumFractionDigits: 2}) }}&nbsp;€
+              {{ formatEuro(zwischensummeZiergehoelz) }}
             </td>
           </tr>
           <tr v-if="zwischensummeZiergehoelz &gt; 500">
@@ -691,15 +676,13 @@
               <td style="text-align:center"> {{v.einheit}} </td>
               <td> {{v.kriterien}} </td>
               <td style="text-align:right">
-                {{v.grundpreis.toLocaleString("de-DE",
-                  {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}&nbsp;€
+                {{ formatEuro(v.grundpreis) }}
               </td>
               <td style="text-align:right"> {{v.minderung}}&nbsp;% </td>
               <td style="text-align:right">
-                {{(Math.round(v.menge * v.grundpreis * (100-v.minderung))/100)
-                  .toLocaleString("de-DE", {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}&nbsp;€
+                {{ formatEuro(wertVorhanden(v)) }}
               </td>
-            </tr>  
+            </tr>
             </template>
           </template>
           <tr>
@@ -708,8 +691,7 @@
             </td>
             <td></td>
             <td style="text-align:right; font-weight:bold;">
-              {{ Number.parseFloat(this.zwischensummeStauden).toLocaleString("de-DE", 
-                 {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}&nbsp;€
+              {{ formatEuro(zwischensummeStauden) }}
             </td>
           </tr>
           <tr v-if="zwischensummeStauden &gt; 300">
@@ -731,13 +713,11 @@
               <td style="text-align:center"> {{v.einheit}} </td>
               <td> {{v.kriterien}} </td>
               <td style="text-align:right">
-                {{v.grundpreis.toLocaleString("de-DE",
-                  {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}&nbsp;€
+                {{ formatEuro(v.grundpreis) }}
               </td>
               <td style="text-align:right"> {{v.minderung}}&nbsp;% </td>
               <td style="text-align:right">
-                {{(Math.round(v.menge * v.grundpreis * (100-v.minderung))/100)
-                  .toLocaleString("de-DE", {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}&nbsp;€
+                {{ formatEuro(wertVorhanden(v)) }}
               </td>
             </tr>
             </template>
@@ -748,8 +728,7 @@
             </td>
             <td></td>
             <td style="text-align:right; font-weight:bold;">
-              {{ rasenFlaeche.toLocaleString("de-DE",
-                 {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}&nbsp;€
+              {{ formatEuro(zwischensummeRasen) }}
             </td>
           </tr>
           <tr v-if="rasenFlaeche &gt; (wep.grunddaten.parzellenflaeche/3)">
@@ -759,8 +738,7 @@
             </td>
             <td></td>
             <td style="text-align:right; font-weight:bold;">
-              {{ gedeckeltRasen.toLocaleString("de-DE",
-                 {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}&nbsp;€
+              {{ formatEuro(gedeckeltRasen) }}
             </td>
           </tr>
 
@@ -769,11 +747,10 @@
             <td colspan="5" style="padding-top:5mm; text-align:right; border-style:none;">
               Summe Zierbegrünung
             </td>
-            <td style="border-style:none;"></td>  
+            <td style="border-style:none;"></td>
             <td style="padding-top:5mm; text-align:right; border-style:none;">
-              {{ Number.parseFloat(gesamtsummeZier).toLocaleString("de-DE", 
-                 {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}&nbsp;€
-            </td>  
+              {{ formatEuro(gesamtsummeZier) }}
+            </td>
           </tr><tr>
             <td colspan="5" style="padding-top:3mm; text-align:right; border-style:none;">
               Minderung aufgrund von Pflegerückständen
@@ -786,11 +763,10 @@
             <td colspan="5" style="text-align:right; border-style:none;">
               Gesamtsumme Zierbegrünung
             </td>
-            <td style="border-style:none;"></td>  
+            <td style="border-style:none;"></td>
             <td style="text-align:right; font-weight:bold; border-style:none;">
-              {{ geminderteZier.toLocaleString("de-DE", 
-                 {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}&nbsp;€
-            </td>  
+              {{ formatEuro(geminderteZier) }}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -829,62 +805,51 @@
           <tr>
             <td>Gesamtsumme Tabelle 1 (Baulichkeiten):</td>
             <td style="text-align:right">
-              {{ gesamtsummeBau.toLocaleString("de-DE", 
-                 {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}&nbsp;€
+              {{ formatEuro(gesamtsummeBau) }}
             </td>
           </tr>
           <tr>
             <td>Gesamtsumme Tabelle 2 (Nebenanlagen):</td>
             <td style="text-align:right">
-              {{ summeNebenanlagen.toLocaleString("de-DE", 
-                 {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}&nbsp;€
+              {{ formatEuro(summeNebenanlagen) }}
             </td>
           </tr>
           <tr>
             <td>Gesamtsumme Tabelle 3 (Gärtnerische Kulturen):</td>
             <td style="text-align:right">
-              {{ geminderteKulturen.toLocaleString("de-DE", 
-                 {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}&nbsp;€
+              {{ formatEuro(geminderteKulturen) }}
             </td>
           </tr>
           <tr>
             <td>Gesamtsumme Tabelle 4 (Zierbegrünung):</td>
             <td style="text-align:right">
-              {{ geminderteZier.toLocaleString("de-DE", 
-                 {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}&nbsp;€
+              {{ formatEuro(geminderteZier) }}
             </td>
           </tr>
           <tr>
             <td>Summe:</td>
             <td style="text-align:right; font-weight:bold;">
-              {{ (gesamtsummeBau+summeNebenanlagen+geminderteKulturen+geminderteZier)
-                 .toLocaleString("de-DE", {minimumFractionDigits: 2, 
-                 maximumFractionDigits: 2}) }}&nbsp;€
+              {{ formatEuro(gesamtsummeBau+summeNebenanlagen+geminderteKulturen+geminderteZier) }}
             </td>
           </tr>
           <tr style="height: 3mm;"/>
           <tr>
             <td>Leistungen für die Erstellung von Gemeinschaftseinrichtungen:</td>
             <td style="text-align:right">
-              {{ wep.leistungen.toLocaleString("de-DE", {minimumFractionDigits: 2, 
-                 maximumFractionDigits: 2}) }}&nbsp;€
+              {{ formatEuro(wep.leistungen) }}
             </td>
           </tr>
           <tr>
             <td>Abzug für Beseitigung von Anpflanzungen und Anlagen:</td>
             <td style="text-align:right">
-              {{ (-summeAuflagen)
-                 .toLocaleString("de-DE", {minimumFractionDigits: 2, 
-                 maximumFractionDigits: 2}) }}&nbsp;€
+              {{ formatEuro(-summeAuflagen) }}
             </td>
           </tr>
           <tr style="height: 3mm;"/>
           <tr>
             <td style="font-weight:bold;">Entschädigung insgesamt:</td>
             <td style="text-align:right; font-weight:bold;">
-              {{ (entschaedigung)
-                 .toLocaleString("de-DE", {minimumFractionDigits: 2, 
-                 maximumFractionDigits: 2}) }}&nbsp;€
+              {{ formatEuro(entschaedigung) }}
             </td>
           </tr>
         </tbody>
@@ -910,8 +875,12 @@ export default {
 
   methods: {
 
+    rundeCent: function(x) {
+      return Math.round(100*x)/100;
+    },
+
     wertVorhanden(v) {
-      return (v.grundpreis*v.menge*(100-v.minderung)*0.01);
+      return Math.round(v.grundpreis*v.menge*(100-v.minderung)) / 100;
     },
 
     accVorhanden(acc, v) {
@@ -921,21 +890,25 @@ export default {
     gesamtAbschreibung(jahr, satz) {
       let gesamt = (this.wep.grunddaten.datum.substring(0,4) - jahr) * satz;
       if (gesamt > 100.0) { gesamt = 100.0 }
-      return gesamt;
+      return this.rundeCent(gesamt);
     },
 
     neuwert: function(g) {
-      return g.normalherstellungswert*g.flaeche*this.wep.baukostenindex;
+      return this.rundeCent(g.normalherstellungswert*g.flaeche*this.wep.baukostenindex);
     },
 
     restwert: function(g) {
-      return g.prozentualerRestwert * 0.01 * this.neuwert(g);
+      return Math.round(g.prozentualerRestwert * this.neuwert(g)) / 100;
     },
 
     zeitwert: function(g) {
-      const neuwert = g.normalherstellungswert*g.flaeche*this.wep.baukostenindex;
+      const neuwert = this.neuwert(g);
       const abschreibung = this.gesamtAbschreibung(g.baujahr, g.abschreibungssatz);
-      return (neuwert*(1 - 0.01*abschreibung));
+      return Math.round(neuwert * (100-abschreibung)) / 100;
+    },
+
+    formatEuro: function(x) {
+        return new Intl.NumberFormat('de-DE', {style: 'currency', currency: 'EUR'}).format(x);
     },
 
   },
@@ -991,7 +964,7 @@ export default {
 
     gedeckeltRasen () {
         let flaeche = Math.min(this.rasenFlaeche, this.wep.grunddaten.parzellenflaeche/3);
-        return flaeche * this.durchschnittsWertRasen;
+        return this.rundeCent(flaeche * this.durchschnittsWertRasen);
     },
 
 
@@ -1041,11 +1014,11 @@ export default {
     },
 
     geminderteKulturen () {
-      return this.summeKulturen * 0.01 * (100-this.wep.minderungKulturen);
+      return Math.round(this.summeKulturen * (100-this.wep.minderungKulturen)) / 100;
     },
 
     geminderteZier () {
-      return this.gesamtsummeZier * 0.01 * (100-this.wep.minderungZier);
+      return Math.round(this.gesamtsummeZier * (100-this.wep.minderungZier)) / 100;
     },
 
     entschaedigung : function () {
@@ -1061,3 +1034,5 @@ export default {
   }
 }
 </script>
+
+

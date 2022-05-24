@@ -1,0 +1,12 @@
+These icons are from the npm package `vue-material-design-icons` that is a
+wrapper for https://github.com/Templarian/MaterialDesign.
+
+The files are copied instead of using 
+
+    import FooIcon from 'vue-material-design-icons/Foo.vue'
+
+because the 6000+ icons are in one directory and that may result in the error
+
+    ENOSPC: System limit for number of file watchers reached
+
+on some systems.

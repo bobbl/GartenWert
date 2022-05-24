@@ -434,20 +434,21 @@
             <b-row>
               <b-col class="text-right">
 <!--
-                {{ Number.parseFloat(g2.normalherstellungswert).toFixed(2) }}
+                {{ Number.parseFloat(g2.normalherstellungswert).toLocaleString("de-DE",
+                   {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}
  -->
                 €/m²
               </b-col>
               <b-col class="text-right">{{ g2.flaeche }} m²</b-col>
               <b-col class="text-right" v-if="preisAnzeigen">
-                {{ Number.parseFloat(neuwert(g2)).toFixed(2) }} €
+                {{ formatEuro(parseFloat(neuwert(g2))) }}
               </b-col>
             </b-row>
           </b-col>
           <b-col sm="2" v-if="g2.art=='Freisitz'">
             <b-button variant="primary" size="sm"
               v-b-tooltip.hover.v-secondary title="NHW des Freisitzes auf 1/3 des NHW der Laube setzen"
-              v-on:click="g.normalherstellungswert = Math.floor((wep.gebaeude[0].normalherstellungswert*100)/3)/100">
+              v-on:click="g2.normalherstellungswert = Math.floor((wep.gebaeude[0].normalherstellungswert*100)/3)/100">
                 <!-- floor to avoid problems with the alert -->
                 NHW = 1/3 Laube
             </b-button>
@@ -493,7 +494,8 @@
               <b-input-group>
                 <b-form-input type="range" min="2" max="5" step="0.01" v-model="g3.abschreibungssatz"/>
                 <b-input-group-append is-text class="text-monospace">
-                  {{ Number.parseFloat(g3.abschreibungssatz).toFixed(2) }} %
+                  {{ Number.parseFloat(g3.abschreibungssatz).
+                     toLocaleString("de-DE", {minimumFractionDigits: 2, maximumFractionDigits: 2}) }} %
                 </b-input-group-append>
               </b-input-group>
 -->
@@ -502,18 +504,20 @@
             <b-col sm="5">
               <b-row>
                 <b-col class="text-right">
-                  {{ Number.parseFloat(g3.abschreibungssatz).toFixed(1) }} %
+                  {{ Number.parseFloat(g3.abschreibungssatz).toLocaleString("de-DE",
+                     {minimumFractionDigits: 1, maximumFractionDigits: 1}) }} %
                 </b-col>
                 <b-col class="text-right">
-                  {{ gesamtAbschreibung(g3.baujahr, g3.abschreibungssatz).toFixed(1) }} %</b-col>
-
+                  {{ gesamtAbschreibung(g3.baujahr, g3.abschreibungssatz).
+                     toLocaleString("de-DE", {minimumFractionDigits: 1, maximumFractionDigits: 1}) }} %
+                </b-col>
 
                 <template v-if="preisAnzeigen">
                   <b-col class="text-right text-muted" v-if="g3.alternativ">
-                    {{ Number.parseFloat(zeitwert(g3)).toFixed(2) }} €
+                    {{ formatEuro(parseFloat(zeitwert(g3))) }}
                   </b-col>
                   <b-col class="text-right font-weight-bold" v-else>
-                    {{ Number.parseFloat(zeitwert(g3)).toFixed(2) }} €
+                    {{ formatEuro(parseFloat(zeitwert(g3))) }}
                   </b-col>
                 </template>
               </b-row>
@@ -547,7 +551,7 @@
             </b-col>
             <b-col sm="2" class="text-right"> {{ g4.prozentualerRestwert }} % </b-col>
             <b-col sm="2" class="text-right font-weight-bold" v-if="preisAnzeigen">
-              {{ Number.parseFloat(restwert(g4)).toFixed(2) }} €
+              {{ formatEuro(parseFloat(restwert(g4))) }}
             </b-col>
           </b-row>
         </div>
@@ -556,7 +560,7 @@
       <b-row class="pr-3" v-if="preisAnzeigen">
         <b-col sm="8"/>
         <b-col sm="2" class="text-right font-weight-bold bg-light pt-2 pb-2">
-            {{ Number.parseFloat(gesamtsummeBau).toFixed(2) }} €
+            {{ formatEuro(gesamtsummeBau) }}
         </b-col>
         <b-col sm="2" class="text-left bg-light pt-2 pb-2">Summe</b-col>
       </b-row>
@@ -640,7 +644,7 @@
                 </b-col>
                 <b-col sm="2" class="text-center">
                   <template v-if="v.iwmin == v.iwmax">
-                    {{ Number.parseFloat(v.iwmax).toFixed(2) }}
+                    {{ formatEuro(parseFloat(v.iwmax)) }}
                   </template>
                   <template v-else>
                     <b-form-input type="number"
@@ -653,11 +657,11 @@
                 </b-col>
                 <b-col sm="2" class="text-center">
                   {{ v.minderung }} %
-                  <b-form-input type="range" min="0" max="100" v-model="v.minderung"/>
+                  <b-form-input type="range" min="0" max="100" v-model.number="v.minderung"/>
                 </b-col>
                 <b-col sm="1" class="text-right">
                   <template v-if="preisAnzeigen">
-                    {{ (Math.round(v.menge * v.grundpreis * (100-v.minderung))/100).toFixed(2) }}
+                    {{ formatEuro(wertVorhanden(v)) }}
                   </template>
                 </b-col>
 
@@ -689,14 +693,16 @@
                    v-if="(level2.name=='Befestigte Gartenfläche') && warnBefestigt">
             Warnung: Befestigte Gartenflächen werden nur bis zu 10% der
             Gesamtgartenfläche (hier 
-            {{ (0.1*wep.grunddaten.parzellenflaeche).toFixed(1) }} 
+            {{ (0.1*wep.grunddaten.parzellenflaeche).
+               toLocaleString("de-DE", {minimumFractionDigits: 1, maximumFractionDigits: 1}) }}
             m²) bewertet. Bitte passen Sie die Flächen entsprechend an.
           </b-alert>
           <b-alert show variant="danger" 
                    v-if="(level2.name=='Rasen und Blumenwiesen') & warnRasen">
             Warnung: Rasenflächen werden nur bis zu 1/3 der
             Gesamtgartenfläche (hier 
-            {{ (wep.grunddaten.parzellenflaeche/3).toFixed(1) }} 
+            {{ (wep.grunddaten.parzellenflaeche/3).
+               toLocaleString("de-DE", {minimumFractionDigits: 1, maximumFractionDigits: 1}) }}
             m²) bewertet
           </b-alert>
         </div>
@@ -724,26 +730,36 @@
         </b-row>
         <b-row class="pt-2" v-if="preisAnzeigen">
           <b-col sm="2">Ziergehölze</b-col>
-          <b-col sm="2" class="text-right">{{ Number.parseFloat(zwischensummeZiergehoelz).toFixed(2) }} €</b-col>
-          <b-col sm="2" class="text-right">500.00 €</b-col>
-          <b-col sm="2" class="text-right">{{ Math.min(zwischensummeZiergehoelz, 500.00).toFixed(2) }} €</b-col>
+          <b-col sm="2" class="text-right">{{ formatEuro(parseFloat(zwischensummeZiergehoelz)) }}</b-col>
+          <b-col sm="2" class="text-right">500,00 €</b-col>
+          <b-col sm="2" class="text-right">{{ formatEuro(Math.min(zwischensummeZiergehoelz, 500.00)) }}</b-col>
         </b-row>
         <b-row class="pt-2" v-if="preisAnzeigen">
           <b-col sm="2">Stauden</b-col>
-          <b-col sm="2" class="text-right">{{ Number.parseFloat(zwischensummeStauden).toFixed(2) }} €</b-col>
-          <b-col sm="2" class="text-right">300.00 €</b-col>
-          <b-col sm="2" class="text-right">{{ Math.min(zwischensummeStauden, 300.00).toFixed(2) }} €</b-col>
+          <b-col sm="2" class="text-right">{{ formatEuro(parseFloat(zwischensummeStauden)) }}</b-col>
+          <b-col sm="2" class="text-right">300,00 €</b-col>
+          <b-col sm="2" class="text-right">{{ formatEuro(Math.min(zwischensummeStauden, 300.00)) }}</b-col>
         </b-row>
         <b-row class="pt-2" v-if="preisAnzeigen">
           <b-col sm="2">Rasen</b-col>
-          <b-col sm="2" class="text-right">{{ Number.parseFloat(rasenFlaeche).toFixed(1) }} m²</b-col>
-          <b-col sm="2" class="text-right">{{ (wep.grunddaten.parzellenflaeche/3).toFixed(1) }} m²</b-col>
-          <b-col sm="2" class="text-right">{{ Number.parseFloat(gedeckeltRasen).toFixed(2) }} €</b-col>
+          <b-col sm="2" class="text-right">
+            {{ Number.parseFloat(rasenFlaeche).toLocaleString("de-DE",
+               {minimumFractionDigits: 1, maximumFractionDigits: 1}) }}
+             m²
+          </b-col>
+          <b-col sm="2" class="text-right">
+            {{ (wep.grunddaten.parzellenflaeche/3).toLocaleString("de-DE",
+               {minimumFractionDigits: 1, maximumFractionDigits: 1}) }}
+            m²
+          </b-col>
+          <b-col sm="2" class="text-right">
+            {{ formatEuro(parseFloat(gedeckeltRasen)) }}
+          </b-col>
         </b-row>
         <b-row class="pt-2 pb-4" v-if="preisAnzeigen">
           <b-col sm="4">Summe</b-col>
           <b-col sm="4" class="text-right font-weight-bold">
-              {{ Number.parseFloat(gesamtsummeZier).toFixed(2) }} €
+              {{ formatEuro(parseFloat(gesamtsummeZier)) }}
           </b-col>
         </b-row>
       </div>
@@ -821,7 +837,7 @@
                 <b-form-input type="text" v-model="v.kriterien"/>
               </b-col>
               <b-col sm="1" class="text-right">
-                {{ (Math.round(v.menge * v.grundpreis * (100-v.minderung))/100).toFixed(2) }}
+                {{ formatEuro(wertVorhanden(v)) }}
               </b-col>
             </template>
             <template v-else>
@@ -984,15 +1000,15 @@
         </b-row>
         <b-row class="pt-2">
           <b-col sm="3">Baulichkeiten</b-col>
-          <b-col sm="7" class="text-right">{{ Number.parseFloat(gesamtsummeBau).toFixed(2) }} €</b-col>
+          <b-col sm="7" class="text-right">{{ formatEuro(gesamtsummeBau) }}</b-col>
         </b-row>
         <b-row class="pt-2">
           <b-col sm="3">Nebenanlagen</b-col>
-          <b-col sm="7" class="text-right">{{ Number.parseFloat(summeNebenanlagen).toFixed(2) }} €</b-col>
+          <b-col sm="7" class="text-right">{{ formatEuro(summeNebenanlagen) }}</b-col>
         </b-row>
         <b-row class="pt-2">
           <b-col sm="3">Gärtnerische Kulturen</b-col>
-          <b-col sm="2" class="text-right">{{ Number.parseFloat(summeKulturen).toFixed(2) }} €</b-col>
+          <b-col sm="2" class="text-right">{{ formatEuro(summeKulturen) }}</b-col>
           <b-col sm="2" class="text-center">
             <b-form-input type="range" min="0" max="100" v-model="wep.minderungKulturen"/>
           </b-col>
@@ -1000,23 +1016,21 @@
             {{ wep.minderungKulturen }} %
           </b-col>
           <b-col sm="2" class="text-right">
-            {{ Number.parseFloat(geminderteKulturen).toFixed(2) }} €
+            {{ formatEuro(geminderteKulturen) }}
           </b-col>
         </b-row>
         <b-row class="pt-2">
           <b-col sm="3">Zierbegrünung</b-col>
-          <b-col sm="2" class="text-right">{{ Number.parseFloat(gesamtsummeZier).toFixed(2) }} €</b-col>
+          <b-col sm="2" class="text-right">{{ formatEuro(gesamtsummeZier) }}</b-col>
           <b-col sm="2">
             <b-form-input type="range" min="0" max="100" v-model="wep.minderungZier" />
           </b-col>
           <b-col sm="1"> {{ wep.minderungZier }} % </b-col>
-          <b-col sm="2" class="text-right">
-            {{ Number.parseFloat(geminderteZier).toFixed(2) }} €
-          </b-col>
+          <b-col sm="2" class="text-right">{{ formatEuro(geminderteZier) }}</b-col>
         </b-row>
         <b-row class="pt-2">
           <b-col sm="3">Abzug für Auflagen</b-col>
-          <b-col sm="7" class="text-right">{{ Number.parseFloat(-summeAuflagen).toFixed(2) }} €</b-col>
+          <b-col sm="7" class="text-right">{{ formatEuro(-summeAuflagen) }}</b-col>
         </b-row>
         <b-row class="pt-2">
           <b-col sm="8">Leistungen für die Erstellung von Gemeinschaftseinrichtungen</b-col>
@@ -1026,7 +1040,9 @@
         </b-row>
         <b-row class="pt-2 pb-2">
           <b-col sm="3">Entschädigung insgesamt</b-col>
-          <b-col sm="7" class="text-right font-weight-bold">{{ Number.parseFloat(entschaedigung).toFixed(2) }} €</b-col>
+          <b-col sm="7" class="text-right font-weight-bold">
+            {{ formatEuro(parseFloat(entschaedigung)) }}
+          </b-col>
         </b-row>
      </div>
     </b-container>
@@ -1045,15 +1061,19 @@
 
 <script>
 import Vue from 'vue'
-import AccountIcon from 'vue-material-design-icons/Account.vue'
-import HomeIcon from 'vue-material-design-icons/Home.vue'
-import WaterPumpIcon from 'vue-material-design-icons/WaterPump.vue'
-import FruitGrapesIcon from 'vue-material-design-icons/FruitGrapes.vue'
-import BarleyIcon from 'vue-material-design-icons/Barley.vue'
-import BikeFastIcon from 'vue-material-design-icons/BikeFast.vue'
-import SigmaIcon from 'vue-material-design-icons/Sigma.vue'
-import ContentSaveIcon from 'vue-material-design-icons/ContentSave.vue'
-import PrinterIcon from 'vue-material-design-icons/Printer.vue'
+
+// Icons are from npm package vue-material-design-icons
+// but `import AccountIcon from 'vue-material-design-icons/Account.vue'` may
+// cause the error `ENOSPC: System limit for number of file watchers reached`
+import AccountIcon from './icons/Account.vue'
+import HomeIcon from './icons/Home.vue'
+import WaterPumpIcon from './icons/WaterPump.vue'
+import FruitGrapesIcon from './icons/FruitGrapes.vue'
+import BarleyIcon from './icons/Barley.vue'
+import BikeFastIcon from './icons/BikeFast.vue'
+import SigmaIcon from './icons/Sigma.vue'
+import ContentSaveIcon from './icons/ContentSave.vue'
+import PrinterIcon from './icons/Printer.vue'
 
 import Protokoll from './Protokoll.vue'
 import AnpassungUeber from './AnpassungUeber.vue'
@@ -1209,6 +1229,10 @@ export default {
 
   methods: {
 
+    rundeCent: function(x) {
+      return Math.round(100*x)/100;
+    },
+
     stepOneOrHalf(min, max) {
         return ((Math.floor(max)!=max) || (Math.floor(min)!=min)) ? 0.5 : 1;
     },
@@ -1335,7 +1359,7 @@ export default {
     },
 
     wertVorhanden(v) {
-      return (v.grundpreis*v.menge*(100-v.minderung)*0.01);
+      return Math.round(v.grundpreis*v.menge*(100-v.minderung)) / 100;
     },
 
     accVorhanden(acc, v) {
@@ -1435,21 +1459,21 @@ export default {
     gesamtAbschreibung(jahr, satz) {
       let gesamt = (this.wep.grunddaten.datum.substring(0,4) - jahr) * satz;
       if (gesamt > 100.0) { gesamt = 100.0 }
-      return gesamt;
+      return this.rundeCent(gesamt);
     },
 
     neuwert: function(g) {
-      return g.normalherstellungswert*g.flaeche*this.wep.baukostenindex;
+      return this.rundeCent(g.normalherstellungswert*g.flaeche*this.wep.baukostenindex);
     },
 
     restwert: function(g) {
-      return g.prozentualerRestwert * 0.01 * this.neuwert(g);
+      return Math.round(g.prozentualerRestwert * this.neuwert(g)) / 100;
     },
 
     zeitwert: function(g) {
-      const neuwert = g.normalherstellungswert*g.flaeche*this.wep.baukostenindex;
+      const neuwert = this.neuwert(g);
       const abschreibung = this.gesamtAbschreibung(g.baujahr, g.abschreibungssatz);
-      return (neuwert*(1 - 0.01*abschreibung));
+      return Math.round(neuwert * (100-abschreibung)) / 100;
     },
 
     onBerechnungshilfeClose() {
@@ -1458,6 +1482,10 @@ export default {
 
     reverseVorhanden: function(level1) {
       return this.wep.vorhanden[level1].slice().reverse();
+    },
+
+    formatEuro: function(x) {
+        return new Intl.NumberFormat('de-DE', {style: 'currency', currency: 'EUR'}).format(x);
     },
 
   },
@@ -1530,7 +1558,7 @@ export default {
 
     gedeckeltRasen () {
         let flaeche = Math.min(this.rasenFlaeche, this.wep.grunddaten.parzellenflaeche/3);
-        return flaeche * this.durchschnittsWertRasen;
+        return this.rundeCent(flaeche * this.durchschnittsWertRasen);
     },
 
     warnRasen() {
@@ -1612,11 +1640,11 @@ export default {
     },
 
     geminderteKulturen () {
-      return this.summeKulturen * 0.01 * (100-this.wep.minderungKulturen);
+      return Math.round(this.summeKulturen * (100-this.wep.minderungKulturen)) / 100;
     },
 
     geminderteZier () {
-      return this.gesamtsummeZier * 0.01 * (100-this.wep.minderungZier);
+      return Math.round(this.gesamtsummeZier * (100-this.wep.minderungZier)) / 100;
     },
 
     entschaedigung : function () {
