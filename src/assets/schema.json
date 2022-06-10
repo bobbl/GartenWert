@@ -781,13 +781,38 @@
       ]
     }
   ],
-    "ausstattung": [
-      { "name": "Wände",         "selected": [], "ergaenzung": "", "options": ["verlattet", "Wasserschlagbretter", "Nut/Feder"]},
-      { "name": "Isolierung",    "selected": [], "ergaenzung": "", "options": ["Glaswolle", "Styropor"]},
-      { "name": "Dachart",       "selected": [], "ergaenzung": "", "options": ["Pult", "Sattel", "Flach"]},
-      { "name": "Dachbegrünung", "selected": [], "ergaenzung": "", "options": ["ja"]},
-      { "name": "Dachdeckung",   "selected": [], "ergaenzung": "", "options": ["Pappe", "Blech", "Ziegel", "Welleternit", "Bitumenschindeln"]},
-      { "name": "Dachrinnen",    "selected": [], "ergaenzung": "", "options": ["Eisenblech", "Zinkrinnen", "Holz", "Kunststoff"]},
-      { "name": "Innenwände",    "selected": [], "ergaenzung": "", "options": ["Nut/Feder", "Presspappe", "Putz"]}
-    ]
+  "ausstattung": [
+    { "name": "Wände",         "selected": [], "ergaenzung": "", "options": ["verlattet", "Wasserschlagbretter", "Nut/Feder"]},
+    { "name": "Isolierung",    "selected": [], "ergaenzung": "", "options": ["Glaswolle", "Styropor"]},
+    { "name": "Dachart",       "selected": [], "ergaenzung": "", "options": ["Pult", "Sattel", "Flach"]},
+    { "name": "Dachbegrünung", "selected": [], "ergaenzung": "", "options": ["ja"]},
+    { "name": "Dachdeckung",   "selected": [], "ergaenzung": "", "options": ["Pappe", "Blech", "Ziegel", "Welleternit", "Bitumenschindeln"]},
+    { "name": "Dachrinnen",    "selected": [], "ergaenzung": "", "options": ["Eisenblech", "Zinkrinnen", "Holz", "Kunststoff"]},
+    { "name": "Innenwände",    "selected": [], "ergaenzung": "", "options": ["Nut/Feder", "Presspappe", "Putz"]}
+  ],
+  "vorschlagZustand": [
+    "Dach laut Aussage dicht",
+    "Wasserschäden erkennbar"
+  ],
+  "vorschlagNichtBewertet": [
+    "Fahnenmast",
+    "Grill",
+    "Unzulässige Gehölze werden nicht bewertet",
+    "Wasseranschluss wurde gestellt",
+    "Wasseruhr wird privatrechtlich abgelöst"
+  ],
+  "vorschlagAuflagen": [
+    "Anbau an die Laube ist unzulässig, muss entfernt werden.",
+    "Keller ist nicht zulässig und muss auf Dauer unbenutzbar gemacht werden.",
+    "Sichtschutz ist unzulässig, muss entfernt werden.",
+    "Solaranlage muss neu genehmigt oder entfernt werden."
+  ],
+  "custom": {
+    "Konfigurierbar": false,
+    "EingabeArt": 1,
+    "AdressEingabe": false,
+    "ZustandsArray": false,
+    "Anmerkungen": false,
+    "Siegel": false
+  }
 }

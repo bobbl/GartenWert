@@ -28,14 +28,15 @@ export default {
 </style>
 
 <style lang="scss">
-  $secondary: #adb5bd; // $gray-500
-  $light: #e9ecef; // $gray-200
+
   $enable-gradients: true;
   $enable-shadows: true;
 
   .tooltip-inner {
     max-width: 500px !important;
   }
+
+  @import "./customize/global.scss";
 
   @import "~bootstrap/scss/bootstrap.scss";
   @import "~bootstrap-vue/src/index.scss";

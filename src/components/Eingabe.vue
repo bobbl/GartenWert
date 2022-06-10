@@ -43,8 +43,7 @@
                         title="Zierbegrünung">
               <BarleyIcon/>
             </b-nav-item>
-            <b-nav-item href="#schnelleingabe"
-                        v-on:click="schnellAnzeigen = !schnellAnzeigen"
+            <b-nav-item v-on:click="custom.EingabeArt = 3-custom.EingabeArt"
                         v-b-tooltip.hover.v-secondary>
               <BikeFastIcon/>
             </b-nav-item>
@@ -60,23 +59,13 @@
             <b-nav-item v-on:click="wepSpeichern"
                         v-b-tooltip.hover.v-secondary
                         title="Vorgang speichern">
-<!-- für Thomas
-              <b-icon icon="cloud-upload" />
--->
               <ContentSaveIcon />
             </b-nav-item>
-            <b-nav-item v-on:click="wepGenerieren(1, true)"
+            <b-nav-item v-on:click="wepGenerieren(true)"
                         v-b-tooltip.hover.v-secondary
                         title="Protokoll drucken">
               <PrinterIcon />
             </b-nav-item>
-<!-- für Thomas
-            <b-nav-item v-on:click="wepGenerieren(2, true)"
-                        v-b-tooltip.hover.v-secondary
-                        title="Protokoll drucken">
-              <PrinterIcon />
-            </b-nav-item>
--->
             <b-nav-item v-on:click="preisAnzeigen = !preisAnzeigen"
                         v-b-tooltip.hover.v-secondary
                         title="Preisanzeige umschalten">
@@ -110,19 +99,86 @@
           <b-button class="mt-2" variant="primary" block v-on:click="wepSpeichern">
             Vorgang speichern
           </b-button>
-          <b-button class="mt-2" variant="primary" block v-on:click="wepGenerieren(1, false)">
+          <b-button class="mt-2" variant="primary" block v-on:click="wepGenerieren(false)">
             Protokoll erzeugen
           </b-button>
-          <b-button class="mt-2" variant="primary" block v-on:click="wepGenerieren(1, true)">
+          <b-button class="mt-2" variant="primary" block v-on:click="wepGenerieren(true)">
             Protokoll drucken
           </b-button>
         </b-col>
 
         <b-col md="6">
-          <AnpassungUeber />
+
+          <CustomUeber />
+
         </b-col>
       </b-row>
     </b-container>
+
+
+
+    <b-container v-if="custom.Konfigurierbar">
+        <b-row class="mr-0 mt-5">
+          <b-col sm="10" class="bg-gradient-secondary p-0">
+            <b-button variant="primary"
+                      class="mr-2"
+                      size="sm"
+                      v-on:click="einstellungenEinklappen = !einstellungenEinklappen">
+              <template v-if="einstellungenEinklappen">
+                <b-icon-caret-right-fill/>Ausklappen
+              </template>
+              <template v-else>
+                <b-icon-caret-down-fill/>Einklappen
+              </template>
+            </b-button>
+            Einstellungen
+          </b-col>
+          <b-col sm="2" class="text-right bg-gradient-secondary p-0">
+          </b-col>
+        </b-row>
+      <div class="mb-3 bg-light pl-2 pr-2 pt-2" v-if="!einstellungenEinklappen">
+        <b-row class="mt-2">
+          <b-col sm="4">
+            <b-form-group label="Eingabeart" v-slot="{ ariaDescribedby }">
+              <b-form-radio v-model="custom.EingabeArt" value="1" :aria-describedby="ariaDescribedby">
+                Hierarchisches Formular
+              </b-form-radio>
+              <b-form-radio v-model="custom.EingabeArt" value="2" :aria-describedby="ariaDescribedby">
+                Combobox
+              </b-form-radio>
+<!--
+              <b-form-radio v-model="custom.EingabeArt" value="3" :aria-describedby="ariaDescribedby">
+                Editierbare Liste
+              </b-form-radio>
+-->
+            </b-form-group>
+          </b-col>
+          <b-col sm="4">
+            <b-form-group label="Bewertungssmethode" v-slot="{ ariaDescribedby }">
+              <b-form-radio v-model="wep.methode" value="0" :aria-describedby="ariaDescribedby">
+                fester Grundpreis
+              </b-form-radio>
+              <b-form-radio v-model="wep.methode" value="1" :aria-describedby="ariaDescribedby">
+                Grundpreisspanne
+              </b-form-radio>
+              <b-form-radio v-model="wep.methode" value="2" :aria-describedby="ariaDescribedby">
+                Methode Koch
+              </b-form-radio>
+            </b-form-group>
+          </b-col>
+          <b-col sm="4">
+            <b-form-checkbox v-model="custom.Siegel">
+              Protokoll mit Siegel
+            </b-form-checkbox>
+            <b-form-checkbox v-model="preisAnzeigen">
+              Eurobeträge anzeigen
+            </b-form-checkbox>
+          </b-col>
+        </b-row>
+      </div>
+    </b-container>
+
+
 
 
 
@@ -160,14 +216,16 @@
           </b-form-checkbox>
         </b-col>
       </b-row>
-      <b-row class="mt-2">
-        <b-col sm="3">Straße</b-col>
-        <b-col sm="9"><b-form-input type="text" v-model="wep.grunddaten.strasse"/></b-col>
-      </b-row>
-      <b-row class="mt-2">
-        <b-col sm="3">Wohnort</b-col>
-        <b-col sm="9"><b-form-input type="text" v-model="wep.grunddaten.ort"/></b-col>
-      </b-row>
+      <template v-if="custom.AdressEingabe">
+        <b-row class="mt-2">
+          <b-col sm="3">Straße</b-col>
+          <b-col sm="9"><b-form-input type="text" v-model="wep.grunddaten.strasse"/></b-col>
+        </b-row>
+        <b-row class="mt-2">
+          <b-col sm="3">Wohnort</b-col>
+          <b-col sm="9"><b-form-input type="text" v-model="wep.grunddaten.ort"/></b-col>
+        </b-row>
+      </template>
       <b-row class="mt-2">
         <b-col sm="3">Weitere Teilnehmer</b-col>
         <b-col sm="9"><b-form-input type="text" v-model="wep.grunddaten.anwesend"/></b-col>
@@ -180,6 +238,14 @@
             aria-label="ARIA-LABEL wird nicht übernommen">
           </b-form-datepicker>
         </b-col>
+      </b-row>
+
+      <b-row v-if="wep.methode==2" class="mt-2">
+        <b-col sm="3">Zinssatz</b-col>
+        <b-col sm="4">
+          <b-form-input step="0.1" type="number" v-model.number="wep.grunddaten.zinssatz"/>
+        </b-col>
+        <b-col sm="1">%</b-col>
       </b-row>
       <b-row class="mt-2 mb-1">
         <b-col sm="3">Dateiname</b-col>
@@ -231,64 +297,53 @@
         </b-row>
 
         <div class="mb-3 bg-light pl-2 pr-2 pt-2" v-if="!g.einklappen">
-          <template v-if="g.art=='Freisitz'">
+          <template v-if="g.art=='Freisitz' || g.art=='Renovierung' || g.art=='Schaden'">
             <b-row class="mt-2">
-              <b-col sm="2"> Fläche</b-col>
+              <b-col sm="3"> Fläche</b-col>
               <b-col sm="2"> <b-form-input type="number" min="0" step="any" v-model.number="g.flaeche"/></b-col>
               <b-col sm="1"> m² </b-col>
-              <b-col sm="7">
-                Breite = Verlängerung der Außenkante <br/>
-                Länge = Vorderkante Überstand bis Außenkante Laubenwand
-              </b-col>
+              <template v-if="g.art=='Freisitz'">
+                <b-col sm="6">
+                  Breite = Verlängerung der Außenkante <br/>
+                  Länge = Vorderkante Überstand bis Außenkante Laubenwand
+                </b-col>
+              </template>
             </b-row>
             <b-row class="mt-2">
-              <b-col sm="2">Baujahr</b-col>
+              <b-col sm="3">Baujahr</b-col>
               <b-col sm="2"><b-form-input type="number" min="0" v-model.number="g.baujahr"/></b-col>
               <b-col sm="4">
                 (Alter: {{wep.grunddaten.datum.substring(0,4)-g.baujahr}} Jahre)
               </b-col>
             </b-row>
-            <b-row class="mt-2">
-              <b-col sm="2">Dachkonstruktion</b-col>
-              <b-col sm="10">
-                <b-form-checkbox v-model="g.einbezogen" value="true" unchecked-value="false">
-                  einbezogen in Gartenhaus
-                </b-form-checkbox>
-              </b-col>
-            </b-row>
-            <b-row class="mt-2 pb-2">
-              <b-col sm="2">Ausführung</b-col>
-              <b-col sm="8">
-                <b-form-input v-model="g.inputZustand" />
-              </b-col>
-              <b-col sm="2" class="text-right">
-                <b-button variant="primary" size="sm"
-                  v-on:click="addGebaeudeZustand(g)">
-                  <b-icon-plus />Hinzufügen
-                </b-button>
-              </b-col>
-            </b-row>
-            <div> <!-- required to separate the zi keys -->
-              <b-row class="pb-1" v-for="(z, zi) in g.zustand" :key="zi">
-                <b-col sm="2"></b-col>
-                <b-col sm="8"> {{ z }} </b-col>
-                <b-col sm="2" class="text-right">
-                  <b-button variant="danger" size="sm"
-                            v-on:click="g.zustand.splice(zi, 1)">
-                    <b-icon-x />Löschen
-                  </b-button>
+
+            <template v-if="g.art=='Freisitz'">
+              <b-row class="mt-2">
+                <b-col sm="3">Dachkonstruktion</b-col>
+                <b-col sm="9">
+                  <b-form-checkbox v-model="g.einbezogen" value="true" unchecked-value="false">
+                    einbezogen in Gartenhaus
+                  </b-form-checkbox>
                 </b-col>
               </b-row>
-            </div>
+            </template>
           </template>
 
           <template v-else>
             <b-row class="mt-2 mb-1">
               <b-col sm="2"> Grundfläche </b-col>
-              <b-col sm="2"> <b-form-input type="number" min="0" step="any" v-model.number="g.flaeche"/> </b-col>
+              <b-col sm="2"> 
+                <b-form-input type="number" min="0" step="any" v-model.number="g.flaeche"
+                              v-b-tooltip.hover title="Außenkante x Außenkante Wand" />
+              </b-col>
               <b-col sm="1"> m² </b-col>
-              <b-col sm="7">
-                (Außenkante x Außenkante Wand)
+              <b-col sm="2"></b-col>
+              <b-col sm="2"> unberücksichtigt </b-col>
+              <b-col sm="2"> 
+                <b-form-input type="number" min="0" step="any" v-model.number="g.flaecheZuviel"
+                              v-b-tooltip.hover title="nur 24m² dürfen berücksichtigt weden" />
+              </b-col>
+              <b-col sm="1"> m² </b-col>
 <!--
               <b-button id="berechnungshilfe">Berechnungshilfe</b-button>
               <b-popover ref="popoverFlaeche" target="berechnungshilfe" triggers="click">
@@ -305,11 +360,6 @@
                 </div>
               </b-popover>
 -->
-              </b-col>
-            </b-row>
-            <b-row class="mt-2 mb-1">
-              <b-col sm="2"></b-col>
-              <b-col sm="10"> <b-form-input v-model="g.flaeche_bem"/> </b-col>
             </b-row>
             <b-alert show variant="danger" v-if="(g.art=='Laube') && warnLaube">
               Warnung: Übergroße Lauben sind mit höchstens 24 m² zu bewerten.
@@ -323,15 +373,18 @@
             </b-row>
             <b-row class="mt-1 mb-1">
               <b-col sm="2"> Baujahr </b-col>
-              <b-col sm="2"> <b-form-input type="number" min="0" v-model.number="g.baujahr"/> </b-col>
-              <b-col sm="3">
+              <b-col sm="2">
+                <b-form-input type="number" min="0" v-model.number="g.baujahr"/> </b-col>
+              <b-col sm="4">
                 (Alter: {{wep.grunddaten.datum.substring(0,4)-g.baujahr}} Jahre)
               </b-col>
             </b-row>
 
             <b-row class="mt-1 mb-1" v-for="(a, ai) in g.ausstattung" :key="ai">
               <b-col sm="2"> {{ a.name }} </b-col>
-              <b-col sm="8"> <b-form-checkbox-group v-model="a.selected" :options="a.options"/> </b-col>
+              <b-col sm="8">
+                <b-form-checkbox-group v-model="a.selected" :options="a.options"/>
+              </b-col>
               <b-col sm="2"> <b-form-input v-model="a.ergaenzung"/> </b-col>
             </b-row>
 
@@ -343,11 +396,14 @@
               <b-col sm="2"> Anzahl Türen </b-col>
               <b-col sm="2"> <b-form-input type="number" min="0" v-model.number="g.tueren"/> </b-col>
             </b-row>
+          </template>
 
+
+          <template v-if="custom.ZustandsArray">
             <b-row class="mt-2 pb-2">
               <b-col sm="2"> Zustand</b-col>
               <b-col sm="8">
-                <b-form-input v-model="g.inputZustand"
+                <b-form-input v-model="g.zustand"
                               placeholder="Bemerkungen zum Zustand" />
               </b-col>
               <b-col sm="2" class="text-right">
@@ -358,42 +414,76 @@
               </b-col>
             </b-row>
             <div> <!-- required to separate the zi keys -->
-              <b-row class="pb-1" v-for="(z, zi) in g.zustand" :key="zi">
+              <b-row class="pb-1" v-for="(z, zi) in g.zustandArray" :key="zi">
                 <b-col sm="2"></b-col>
                 <b-col sm="8"> {{ z }} </b-col>
                 <b-col sm="2" class="text-right">
                   <b-button variant="danger" size="sm"
-                            v-on:click="g.zustand.splice(zi, 1)">
+                            v-on:click="g.zustandArray.splice(zi, 1)">
                     <b-icon-x />Löschen
                   </b-button>
                 </b-col>
               </b-row>
             </div>
           </template>
+          <template v-else>
+            <b-row class="mt-2 pb-2">
+              <b-col sm="2"> Zustand</b-col>
+              <b-col sm="8">
+                <b-form-input v-model="g.zustand"
+                              placeholder="Bemerkungen zum Zustand" />
+              </b-col>
+            </b-row>
+          </template>
         </div>
       </div>
 
-      <b-row class="pt-4">
-        <b-col sm="4">
-          <b-button block variant="primary" size="md" v-on:click="addGebaeude('Anbau')">
-            <b-icon-plus /> Anbau-Bewertung hinzufügen
-          </b-button>
-        </b-col>
-        <b-col sm="8">
-          Anbauten werden nur separat bewertet, wenn eigenständiger Bauteil der Laube
-        </b-col>
-      </b-row>
-      <b-row class="pt-2">
-        <b-col sm="4">
-          <b-button block variant="primary" size="md" v-on:click="addGebaeude('Nebenbau')">
-            <b-icon-plus /> Nebenbau-Bewertung hinzufügen
-          </b-button>
-        </b-col>
-        <b-col sm="8">
-          Nebenbauten werden nur bewertet, wenn zugelassen
-        </b-col>
-      </b-row>
-
+      <template v-if="wep.methode==2"> <!-- nur bei Koch -->
+        <b-row class="pt-4">
+          <b-col sm="3">
+            <b-button block variant="primary" size="md" v-on:click="addGebaeude('Anbau')">
+              <b-icon-plus /> Anbau
+            </b-button>
+          </b-col>
+          <b-col sm="3">
+            <b-button block variant="primary" size="md" v-on:click="addGebaeude('Nebenbau')">
+              <b-icon-plus /> Nebenbau
+            </b-button>
+          </b-col>
+          <b-col sm="3">
+            <b-button block variant="primary" size="md" v-on:click="addGebaeude('Renovierung')">
+              <b-icon-plus /> Renovierung
+            </b-button>
+          </b-col>
+          <b-col sm="3">
+            <b-button block variant="primary" size="md" v-on:click="addGebaeude('Schaden')">
+              <b-icon-plus /> Schaden
+            </b-button>
+          </b-col>
+        </b-row>
+      </template>
+      <template v-else>
+        <b-row class="pt-4">
+          <b-col sm="4">
+            <b-button block variant="primary" size="md" v-on:click="addGebaeude('Anbau')">
+              <b-icon-plus /> Anbau-Bewertung hinzufügen
+            </b-button>
+          </b-col>
+          <b-col sm="8">
+            Anbauten werden nur separat bewertet, wenn eigenständiger Bauteil der Laube
+          </b-col>
+        </b-row>
+        <b-row class="pt-2">
+          <b-col sm="4">
+            <b-button block variant="primary" size="md" v-on:click="addGebaeude('Nebenbau')">
+              <b-icon-plus /> Nebenbau-Bewertung hinzufügen
+            </b-button>
+          </b-col>
+          <b-col sm="8">
+            Nebenbauten werden nur bewertet, wenn zugelassen
+          </b-col>
+        </b-row>
+      </template>
 
 
 
@@ -425,25 +515,18 @@
             {{ g2.art }}
           </b-col>
           <b-col sm="3">
-            <b-form-input type="number" min="0" max="26.0" step="any" v-model.number="g2.normalherstellungswert"/>
-<!--
-            <b-form-input type="range" min="2.50" max="26.0" step="0.10" v-model="g2.normalherstellungswert"/>
--->
+            <!-- NHW ist bei Koch unbegrenzt -->
+            <template v-if="wep.methode==2">
+              <b-form-input type="number" min="0" step="any" v-model.number="g2.normalherstellungswert"/>
+            </template>
+            <template v-else>
+              <b-form-input type="number" min="0" max="26.0" step="any" v-model.number="g2.normalherstellungswert"/>
+            </template>
           </b-col>
-          <b-col sm="5">
-            <b-row>
-              <b-col class="text-right">
-<!--
-                {{ Number.parseFloat(g2.normalherstellungswert).toLocaleString("de-DE",
-                   {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}
- -->
-                €/m²
-              </b-col>
-              <b-col class="text-right">{{ g2.flaeche }} m²</b-col>
-              <b-col class="text-right" v-if="preisAnzeigen">
-                {{ formatEuro(parseFloat(neuwert(g2))) }}
-              </b-col>
-            </b-row>
+          <b-col sm="1">€/m²</b-col>
+          <b-col sm="2" class="text-right">{{ g2.flaeche }} m²</b-col>
+          <b-col sm="2" class="text-right" v-if="preisAnzeigen">
+            {{ formatEuro(parseFloat(neuwert(g2))) }}
           </b-col>
           <b-col sm="2" v-if="g2.art=='Freisitz'">
             <b-button variant="primary" size="sm"
@@ -499,17 +582,17 @@
                 </b-input-group-append>
               </b-input-group>
 -->
-              <b-form-input type="range" min="2" max="5" step="0.1" v-model="g3.abschreibungssatz"/>
+              <b-form-input type="range" min="2" max="5" step="0.01" v-model="g3.abschreibungssatz"/>
             </b-col>
             <b-col sm="5">
               <b-row>
                 <b-col class="text-right">
                   {{ Number.parseFloat(g3.abschreibungssatz).toLocaleString("de-DE",
-                     {minimumFractionDigits: 1, maximumFractionDigits: 1}) }} %
+                     {minimumFractionDigits: 2, maximumFractionDigits: 2}) }} %
                 </b-col>
                 <b-col class="text-right">
                   {{ gesamtAbschreibung(g3.baujahr, g3.abschreibungssatz).
-                     toLocaleString("de-DE", {minimumFractionDigits: 1, maximumFractionDigits: 1}) }} %
+                     toLocaleString("de-DE", {minimumFractionDigits: 2, maximumFractionDigits: 2}) }} %
                 </b-col>
 
                 <template v-if="preisAnzeigen">
@@ -576,20 +659,35 @@
       -- Gliederung
       -- ----------------------------------------------------------- -->
 
+    <template v-if="custom.EingabeArt==1">
       <b-container :id="'gliederung'+level1i" v-for="(level1, level1i) in gliederung" :key="level1i">
         <h2>{{ level1.name }}</h2>
 
         <b-row>
           <b-col sm="2">Menge</b-col>
-          <b-col sm="4">Bewertungskriterien</b-col>
-          <b-col sm="2">Grundpreis</b-col>
-          <b-col sm="2">Minderung</b-col>
-          <b-col sm="1">
+
+          <!-- Andere Spalten, wenn Grundpreis abgeändet werden kann -->
+          <template v-if="wep.methode != 0">
+            <b-col sm="4">Bewertungskriterien</b-col>
+            <b-col sm="2">Grundpreis</b-col>
+            <b-col sm="2">Minderung</b-col>
+            <b-col sm="1">
+              <template v-if="preisAnzeigen">Preis</template>
+            </b-col>
+            <b-col sm="1"></b-col>
+          </template>
+
+          <template v-else>
+            <b-col sm="2">Minderung</b-col>
             <template v-if="preisAnzeigen">
-              Preis
+              <b-col sm="5">Bewertungskriterien</b-col>
+              <b-col sm="1">Preis</b-col>
             </template>
-          </b-col>
-          <b-col sm="1"></b-col>
+            <template v-else>
+              <b-col sm="6">Bewertungskriterien</b-col>
+            </template>
+            <b-col sm="2"></b-col>
+          </template>
         </b-row>
 
         <div v-for="(level2, level2i) in level1.sub" :key="level2i">
@@ -637,6 +735,43 @@
                   </b-row>
                 </b-col>
 
+
+
+                <!-- ----------------------------------------------- --
+                  -- Methode Koch / Nebenanlagen: Grundpreis abändern
+                  -- ----------------------------------------------- -->
+                <template v-if="wep.methode==2">
+                  <b-col sm="4">
+                    <b-form-input type="text"
+                                  v-model="v.kriterien"
+                                  :placeholder="level1.kriterien" />
+                  </b-col>
+                  <b-col sm="2" class="text-center">
+                    <b-form-input type="number" v-model.number="v.grundpreis"/>
+                  </b-col>
+                  <b-col sm="2" class="text-center">
+                    {{ v.minderung }} %
+                    <b-form-input type="range" min="0" max="100" v-model.number="v.minderung"/>
+                  </b-col>
+                  <b-col sm="1" class="text-right">
+                    <template v-if="preisAnzeigen">
+                      {{ (Math.round(v.menge * v.grundpreis * (100-v.minderung))/100).toFixed(2) }}
+                    </template>
+                  </b-col>
+
+                  <b-col sm="1" class="text-right">
+                    <b-button variant="danger" size="sm"
+                              v-on:click="wep.vorhanden[level1i].splice(vi, 1)">
+                    <b-icon-x />
+                    </b-button>
+                  </b-col>
+                </template>
+
+
+                <!-- ----------------------------------------------- --
+                  -- Methode LBK: Grundpreis in Grenzen ändern
+                  -- ----------------------------------------------- -->
+                <template v-if="wep.methode==1">
                 <b-col sm="4">
                   <b-form-input type="text"
                                 v-model="v.kriterien"
@@ -671,6 +806,43 @@
                   <b-icon-x />
                   </b-button>
                 </b-col>
+                </template>
+
+
+                <!-- ----------------------------------------------- --
+                  -- Methode einfach: fester Grundpreis
+                  -- ----------------------------------------------- -->
+                <template v-if="wep.methode==0">
+                <b-col sm="2 text-center">
+                  {{ v.minderung }} %
+                  <b-form-input type="range" min="0" max="100" v-model.number="v.minderung"/>
+                </b-col>
+                <template v-if="preisAnzeigen">
+                  <b-col sm="5">
+                    <b-form-input type="text"
+                                  v-model="v.kriterien"
+                                  :placeholder="level1.kriterien" />
+                  </b-col>
+                  <b-col sm="1" class="text-right">
+                    {{ (Math.round(v.menge * v.grundpreis * (100-v.minderung))/100).toFixed(2) }}
+                  </b-col>
+                </template>
+                <template v-else>
+                  <b-col sm="6">
+                    <b-form-input type="text"
+                                  v-model="v.kriterien"
+                                  :placeholder="level1.kriterien" />
+                  </b-col>
+                </template>
+
+                <b-col sm="2 text-right">
+                  <b-button variant="danger" size="sm"
+                            v-on:click="wep.vorhanden[level1i].splice(vi, 1)">
+                  <b-icon-x />Löschen
+                  </b-button>
+                </b-col>
+
+                </template>
               </b-row>
             </div>
           </template>
@@ -716,55 +888,67 @@
         -- Berechnungsschema Zierbegrünung
         -- --------------------------------------------------------- -->
 
-    <b-container class="mt-4">
-      <b-row class="bg-gradient-secondary mr-0 mt-2 pt-1 pb-1">
-        <b-col sm="1"></b-col>
-        <b-col sm="11">Berechnungsschema Zierbegrünung</b-col>
-      </b-row>
-      <div class="mb-3 bg-light pl-2 pr-2 pt-2">
-        <b-row class="pt-2" v-if="preisAnzeigen">
-          <b-col sm="2"></b-col>
-          <b-col sm="2" class="text-right">Zwischensumme</b-col>
-          <b-col sm="2" class="text-right">Höchstwert</b-col>
-          <b-col sm="2" class="text-right">Wert</b-col>
+      <b-container class="mt-4">
+        <b-row class="bg-gradient-secondary mr-0 mt-2 pt-1 pb-1">
+          <b-col sm="1"></b-col>
+          <b-col sm="11">Berechnungsschema Zierbegrünung</b-col>
         </b-row>
-        <b-row class="pt-2" v-if="preisAnzeigen">
-          <b-col sm="2">Ziergehölze</b-col>
-          <b-col sm="2" class="text-right">{{ formatEuro(parseFloat(zwischensummeZiergehoelz)) }}</b-col>
-          <b-col sm="2" class="text-right">500,00 €</b-col>
-          <b-col sm="2" class="text-right">{{ formatEuro(Math.min(zwischensummeZiergehoelz, 500.00)) }}</b-col>
-        </b-row>
-        <b-row class="pt-2" v-if="preisAnzeigen">
-          <b-col sm="2">Stauden</b-col>
-          <b-col sm="2" class="text-right">{{ formatEuro(parseFloat(zwischensummeStauden)) }}</b-col>
-          <b-col sm="2" class="text-right">300,00 €</b-col>
-          <b-col sm="2" class="text-right">{{ formatEuro(Math.min(zwischensummeStauden, 300.00)) }}</b-col>
-        </b-row>
-        <b-row class="pt-2" v-if="preisAnzeigen">
-          <b-col sm="2">Rasen</b-col>
-          <b-col sm="2" class="text-right">
-            {{ Number.parseFloat(rasenFlaeche).toLocaleString("de-DE",
-               {minimumFractionDigits: 1, maximumFractionDigits: 1}) }}
-             m²
-          </b-col>
-          <b-col sm="2" class="text-right">
-            {{ (wep.grunddaten.parzellenflaeche/3).toLocaleString("de-DE",
-               {minimumFractionDigits: 1, maximumFractionDigits: 1}) }}
-            m²
-          </b-col>
-          <b-col sm="2" class="text-right">
-            {{ formatEuro(parseFloat(gedeckeltRasen)) }}
-          </b-col>
-        </b-row>
-        <b-row class="pt-2 pb-4" v-if="preisAnzeigen">
-          <b-col sm="4">Summe</b-col>
-          <b-col sm="4" class="text-right font-weight-bold">
-              {{ formatEuro(parseFloat(gesamtsummeZier)) }}
-          </b-col>
-        </b-row>
-      </div>
-    </b-container>
-
+        <div class="mb-3 bg-light pl-2 pr-2 pt-2">
+          <b-row class="pt-2" v-if="preisAnzeigen">
+            <b-col sm="2"></b-col>
+            <b-col sm="2" class="text-right">Zwischensumme</b-col>
+            <b-col sm="2" class="text-right">Höchstwert</b-col>
+            <b-col sm="2" class="text-right">Wert</b-col>
+          </b-row>
+          <b-row class="pt-2" v-if="preisAnzeigen">
+            <b-col sm="2">Ziergehölze</b-col>
+            <b-col sm="2" class="text-right">
+              {{ formatEuro(parseFloat(zwischensummeZiergehoelz)) }}
+            </b-col>
+            <b-col sm="2" class="text-right">
+              500,00 €
+            </b-col>
+            <b-col sm="2" class="text-right">
+              {{ formatEuro(Math.min(zwischensummeZiergehoelz, 500.00)) }}
+            </b-col>
+          </b-row>
+          <b-row class="pt-2" v-if="preisAnzeigen">
+            <b-col sm="2">Stauden</b-col>
+            <b-col sm="2" class="text-right">
+              {{ formatEuro(parseFloat(zwischensummeStauden)) }}
+            </b-col>
+            <b-col sm="2" class="text-right">
+              300,00 €
+            </b-col>
+            <b-col sm="2" class="text-right">
+              {{ formatEuro(Math.min(zwischensummeStauden, 300.00)) }}
+            </b-col>
+          </b-row>
+          <b-row class="pt-2" v-if="preisAnzeigen">
+            <b-col sm="2">Rasen</b-col>
+            <b-col sm="2" class="text-right">
+              {{ Number.parseFloat(rasenFlaeche).toLocaleString("de-DE",
+                 {minimumFractionDigits: 1, maximumFractionDigits: 1}) }}
+               m²
+            </b-col>
+            <b-col sm="2" class="text-right">
+              {{ (wep.grunddaten.parzellenflaeche/3).toLocaleString("de-DE",
+                 {minimumFractionDigits: 1, maximumFractionDigits: 1}) }}
+              m²
+            </b-col>
+            <b-col sm="2" class="text-right">
+              {{ formatEuro(parseFloat(gedeckeltRasen)) }}
+            </b-col>
+          </b-row>
+          <b-row class="pt-2 pb-4" v-if="preisAnzeigen">
+            <b-col sm="4">Summe</b-col>
+            <b-col sm="4" class="text-right font-weight-bold">
+                {{ formatEuro(parseFloat(gesamtsummeZier)) }}
+            </b-col>
+          </b-row>
+        </div>
+      </b-container>
+    </template>
 
 
 
@@ -773,10 +957,10 @@
       -- Schnelleingabe
       -- ----------------------------------------------------------- -->
 
-    <b-container v-if="schnellAnzeigen">
-      <h2 id="schnelleingabe">Schnelleingabe</h2>
+    <template v-if="custom.EingabeArt==2">
+      <b-container :id="'gliederung'+i" v-for="(l, i) in gliederung" :key="i">
+        <h2>{{ l.name }}</h2>
 
-      <div v-for="(l, i) in gliederung" :key="i">
         <b-row class="bg-gradient-secondary mr-0 mt-2 pt-1 pb-1">
           <b-col sm="1" class="mt-1">
             <b-button variant="primary" size="sm" aria-label="Ein/Ausklappen"
@@ -812,6 +996,189 @@
           </b-col>
         </b-row>
 
+        <div v-if="!l.einklappen">
+
+
+          <template v-if="wep.methode==2">
+            <div v-for="(v, vi) in reverseVorhanden(i)" :key="vi"
+              class="mb-3 bg-light pl-2 pr-2 pt-2 pb-2">
+
+              <!-- ----------------------------------------------- --
+                -- Methode Koch / vereinfachte Fälle
+                -- -----------------------------------------------
+                -- bei Nebenanlagen (summentyp 1): Menge, Grundpreis, Minderung
+                -- bei Bodenverbesserung (summentyp 1): Menge, Grundpreis, Minderung
+                -- bei Rasen / Beet (summentyp 5): Menge, Grundpreis, Minderung, Pflanzung
+                -->
+              <template v-if="v.summentyp==1 || v.summentyp==5">
+                <b-row>
+                  <b-col sm="4">
+                    <strong>{{ v.key }}</strong>
+                  </b-col>
+                  <b-col sm="2">
+                    <b-row>
+                      <b-col sm="8" class="pr-0">
+                        <b-form-input type="number" min="0" step="any" v-model.number="v.menge"/>
+                      </b-col>
+                      <b-col sm="4" class=" pl-1 text-left">
+                        {{ v.einheit }}
+                      </b-col>
+                    </b-row>
+                  </b-col>
+                  <b-col sm="2" class="text-right">Grundpreis</b-col>
+                  <b-col sm="2" class="text-center">
+                    <b-form-input type="number" v-model.number="v.grundpreis"/>
+                  </b-col>
+                  <b-col sm="2" class="text-right">
+                    <template v-if="preisAnzeigen">
+                      {{ formatEuro(sachwertZumStichtag(v)) }}
+                    </template>
+                  </b-col>
+                </b-row>
+                <b-row>
+                  <template v-if="v.summentyp==5">
+                    <b-col sm="2" class="text-right">Pflanzung</b-col>
+                    <b-col sm="3" class="text-center">
+                      {{ v.pflanzung }} %
+                      <b-form-input type="range" min="0" max="100" step="1" v-model.number="v.pflanzung"/>
+                    </b-col>
+                  </template>
+                  <template v-else>
+                    <b-col sm="4">
+                      <b-form-input type="text" v-model="v.kriterien"/>
+                    </b-col>
+                    <b-col sm="1">
+                    </b-col>
+                  </template>
+                  <b-col sm="2" class="text-right">Minderung</b-col>
+                  <b-col sm="3" class="text-center">
+                    {{ v.minderung }} %
+                    <b-form-input type="range" min="0" max="100" step="5" v-model.number="v.minderung"/>
+                  </b-col>
+                  <b-col sm="2" class="text-right">
+                    <template v-if="i==0"> <!-- nur bei Nebenanlagen -->
+                      <b-button variant="danger" size="sm" aria-label="Löschen"
+                                v-on:click="wep.vorhanden[i].splice(wep.vorhanden[i].length-1-vi, 1)">
+                        <b-icon-x />Löschen
+                      </b-button>
+                    </template>
+                  </b-col>
+                </b-row>
+                <template v-if="i!=0"> <!-- bei Nebenanlagen nicht-->
+                  <b-row>
+                    <b-col sm="10" class="text-right">
+                      <b-form-checkbox-group v-model="v.minderungsgruende" :options="textMinderungsgrund"/>
+                    </b-col>
+                    <b-col sm="2" class="text-right">
+                      <b-button variant="danger" size="sm" aria-label="Löschen"
+                                v-on:click="wep.vorhanden[i].splice(wep.vorhanden[i].length-1-vi, 1)">
+                      <b-icon-x />Löschen
+                      </b-button>
+                    </b-col>
+                  </b-row>
+                </template>
+              </template>
+
+
+
+              <!-- ----------------------------------------------- --
+                -- Methode Koch / vollständige Fälle
+                -- ----------------------------------------------- -->
+              <template v-else>
+                <b-row>
+                  <b-col sm="4">
+                    <strong>{{ v.key }}</strong>
+                  </b-col>
+                  <b-col sm="2">
+                    <b-row>
+                      <b-col sm="8" class="pr-0">
+                        <b-form-input type="number" min="0" step="any" v-model.number="v.menge"/>
+                      </b-col>
+                      <b-col sm="4" class=" pl-1 text-left">
+                        {{ v.einheit }}
+                      </b-col>
+                    </b-row>
+                  </b-col>
+                  <b-col sm="2" class="text-right">Grundpreis</b-col>
+                  <b-col sm="2" class="text-center">
+                    <b-form-input type="number" v-model.number="v.grundpreis"/>
+                  </b-col>
+                  <b-col sm="2" class="text-right">
+                    <template v-if="preisAnzeigen">
+                      {{ formatEuro(sachwertZumStichtag(v)) }}
+                    </template>
+                  </b-col>
+                </b-row>
+                <b-row>
+                  <b-col sm="2" class="text-right">Pflanzung</b-col>
+                  <b-col sm="3" class="text-center">
+                    {{ v.pflanzung }} %
+                    <b-form-input type="range" min="0" max="100" step="5" v-model.number="v.pflanzung"/>
+                  </b-col>
+                  <b-col sm="2" class="text-right">Anwachsrisiko</b-col>
+                  <b-col sm="3" class="text-center">
+                    {{ v.anwachsrisiko }} %
+                    <b-form-input type="range" min="0" max="20" step="1" v-model.number="v.anwachsrisiko"/>
+                  </b-col>
+                  <b-col sm="2"></b-col>
+                </b-row>
+                <b-row>
+                  <b-col sm="2" class="text-right">Pflege</b-col>
+                  <b-col sm="3" class="text-center">
+                    {{ v.pflege }} %
+                    <b-form-input type="range" min="0" max="100" step="1" v-model.number="v.pflege"/>
+                  </b-col>
+                  <b-col sm="2" class="text-right">Alterswertminderung</b-col>
+                  <b-col sm="3" class="text-center">
+                    {{ v.alterswertminderung }} %
+                    <b-form-input type="range" min="0" max="100" step="5" v-model.number="v.alterswertminderung"/>
+                  </b-col>
+                  <b-col sm="2"></b-col>
+                </b-row>
+                <b-row>
+                  <b-col sm="3" class="text-right">Herstellungsdauer</b-col>
+                  <b-col sm="2">
+                    <b-row>
+                      <b-col sm="8" class="pr-0">
+                        <b-form-input type="number" min="0" step="any" v-model.number="v.herstellungsdauer"/>
+                      </b-col>
+                      <b-col sm="4" class=" pl-1 text-left">Jahre</b-col>
+                    </b-row>
+                  </b-col>
+                  <b-col sm="2" class="text-right">Minderung</b-col>
+                  <b-col sm="3" class="text-center">
+                    {{ v.minderung }} %
+                    <b-form-input type="range" min="0" max="100" step="5" v-model.number="v.minderung"/>
+                  </b-col>
+                  <b-col sm="2"></b-col>
+                </b-row>
+                <b-row>
+                  <b-col sm="8" class="text-right">
+                    <b-form-checkbox-group v-model="v.minderungsgruende" :options="textMinderungsgrund"/>
+                  </b-col>
+                  <b-col sm="2">
+                    <b-form-input type="text" v-model="v.kriterien"/>
+                  </b-col>
+                  <b-col sm="2" class="text-right">
+                    <b-button variant="danger" size="sm" aria-label="Löschen"
+                              v-on:click="wep.vorhanden[i].splice(wep.vorhanden[i].length-1-vi, 1)">
+                    <b-icon-x />Löschen
+                    </b-button>
+                  </b-col>
+                </b-row>
+              </template>
+
+
+
+            </div>
+          </template>
+
+
+
+          <!-- ----------------------------------------------- --
+            -- Bewertungsmethode Grundpreisspanne
+            -- ----------------------------------------------- -->
+          <template v-if="wep.methode==1">
         <div class="mb-3 bg-light pl-2 pr-2 pt-2" v-if="!l.einklappen">
           <b-row v-for="(v, vi) in reverseVorhanden(i)" :key="vi">
             <b-col sm="3">
@@ -854,15 +1221,60 @@
             </b-col>
           </b-row>
         </div>
-      </div>
-    </b-container>
+          </template> 
 
 
 
+          <!-- ----------------------------------------------- --
+            -- Methode einfach: fester Grundpreis
+            -- ----------------------------------------------- -->
+          <template v-if="wep.methode==0">
+            <b-row v-for="(v, vi) in reverseVorhanden(i)" :key="vi">
+              <b-col sm="3">
+                {{ v.key }}
+              </b-col>
+              <b-col sm="2">
+                <b-row>
+                  <b-col sm="8" class="pr-0">
+                    <b-form-input type="number" min="0" step="any" v-model.number="v.menge"/>
+                  </b-col>
+                  <b-col sm="4" class=" pl-1 text-left">
+                    {{ v.einheit }}
+                  </b-col>
+                </b-row>
+              </b-col>
+
+              <b-col sm="2 text-center">
+                {{ v.minderung }} %
+                <b-form-input type="range" min="0" max="100" step="5" v-model.number="v.minderung"/>
+              </b-col>
+              <template v-if="preisAnzeigen">
+                <b-col sm="3">
+                  <b-form-input type="text" v-model="v.kriterien"/>
+                </b-col>
+                <b-col sm="1" class="text-right">
+                  {{ (Math.round(v.menge * v.grundpreis * (100-v.minderung))/100).toFixed(2) }}
+                </b-col>
+              </template>
+              <template v-else>
+                <b-col sm="4">
+                  <b-form-input type="text" v-model="v.kriterien"/>
+                </b-col>
+              </template>
+
+              <b-col sm="1">
+                <b-button variant="danger" size="sm" aria-label="Löschen"
+                          v-on:click="wep.vorhanden[i].splice(wep.vorhanden[i].length-1-vi, 1)">
+                <b-icon-x />
+                </b-button>
+              </b-col>
+            </b-row>
+          </template>
 
 
-
-
+        </div>
+      </b-container>
+    </template>
 
 
     <b-container>
@@ -879,7 +1291,8 @@
       <div class="mb-3 bg-light pl-2 pr-2 pt-2">
         <b-row class="pb-1">
           <b-col sm="10">
-            <b-form-input v-model="inputNichtBewertet.name"></b-form-input>
+            <b-form-input list="list-nicht" v-model="inputNichtBewertet.name"></b-form-input>
+            <b-form-datalist id="list-nicht" :options="vorschlagNichtBewertet"></b-form-datalist>
           </b-col>
           <b-col sm="2" class="text-right">
             <b-button variant="primary" size="sm"
@@ -910,7 +1323,8 @@
       <div class="mb-3 bg-light pl-2 pr-2 pt-2">
         <b-row class="pb-1">
           <b-col sm="8">
-            <b-form-input v-model="inputAuflagen.name"></b-form-input>
+            <b-form-input list="list-auflagen" v-model="inputAuflagen.name"></b-form-input>
+            <b-form-datalist id="list-auflagen" :options="vorschlagAuflagen"></b-form-datalist>
           </b-col>
         <b-col sm="2" class="pr-0">
           <b-form-input type="number" v-model.number="inputAuflagen.preis"/>
@@ -952,19 +1366,21 @@
         </b-row>
       </div>
 
-      <b-row class="bg-gradient-secondary mr-0 mt-2 pt-1 pb-1">
-        <b-col sm="1"></b-col>
-        <b-col sm="11">Anmerkungen</b-col>
-      </b-row>
-      <div class="mb-3 bg-light pl-2 pr-2 pt-2">
-        <b-row class="mt-2 mb-2 pb-2">
-          <b-col>
-            <b-form-textarea placeholder="nur ausfüllen, falls notwendig"
-                             rows="4"
-                             v-model="wep.anmerkungen"/>
-          </b-col>
+      <template v-if="custom.Anmerkungen">
+        <b-row class="bg-gradient-secondary mr-0 mt-2 pt-1 pb-1">
+          <b-col sm="1"></b-col>
+          <b-col sm="11">Anmerkungen</b-col>
         </b-row>
-      </div>
+        <div class="mb-3 bg-light pl-2 pr-2 pt-2">
+          <b-row class="mt-2 mb-2 pb-2">
+            <b-col>
+              <b-form-textarea placeholder="nur ausfüllen, falls notwendig"
+                               rows="4"
+                               v-model="wep.anmerkungen"/>
+            </b-col>
+          </b-row>
+        </div>
+      </template>
 
       <!-- --------------------------------------------------------- --
         -- Warnungen
@@ -986,6 +1402,38 @@
       <!-- --------------------------------------------------------- --
         -- Gesamtsumme
         -- --------------------------------------------------------- -->
+
+      <template v-if="wep.methode==2">
+        <b-row class="bg-gradient-secondary mr-0 mt-2 pt-1 pb-1">
+          <b-col sm="1"></b-col>
+          <b-col sm="11">Gesamtsumme</b-col>
+        </b-row>
+        <div class="mb-3 bg-light pl-2 pr-2 pt-2">
+          <b-row class="pt-2">
+            <b-col sm="3">Baulichkeiten</b-col>
+            <b-col sm="2" class="text-right">{{ formatEuro(gesamtsummeBau) }}</b-col>
+          </b-row>
+          <b-row class="pt-2">
+            <b-col sm="3">Nebenanlagen</b-col>
+            <b-col sm="2" class="text-right">{{ formatEuro(summeNebenanlagen) }}</b-col>
+          </b-row>
+          <b-row class="pt-2">
+            <b-col sm="3">Gärtnerische Kulturen</b-col>
+            <b-col sm="2" class="text-right">{{ formatEuro(summeKulturenKoch) }}</b-col>
+          </b-row>
+          <b-row class="pt-2">
+            <b-col sm="3">Zierbegrünung</b-col>
+            <b-col sm="2" class="text-right">{{ formatEuro(summeZierKoch) }}</b-col>
+          </b-row>
+          <b-row class="pt-2 pb-2">
+            <b-col sm="3">Entschädigung insgesamt</b-col>
+            <b-col sm="2" class="text-right font-weight-bold">
+              {{ formatEuro(entschaedigungKoch) }}
+            </b-col>
+          </b-row>
+       </div>
+      </template>
+      <template v-else>
 
       <b-row class="bg-gradient-secondary mr-0 mt-2 pt-1 pb-1">
         <b-col sm="1"></b-col>
@@ -1045,6 +1493,7 @@
           </b-col>
         </b-row>
      </div>
+     </template>
     </b-container>
     <b-container>
       <h2>.</h2>
@@ -1076,15 +1525,15 @@ import ContentSaveIcon from './icons/ContentSave.vue'
 import PrinterIcon from './icons/Printer.vue'
 
 import Protokoll from './Protokoll.vue'
-import AnpassungUeber from './AnpassungUeber.vue'
-
-import AnpassungSchema from '../assets/AnpassungSchema.json'
+import ProtokollKoch from './ProtokollKoch.vue'
+import Ueber from '../customize/Ueber.vue'
+import Schema from '../assets/schema.json'
 
 
 export default {
   name: 'Eingabe',
 
-  mySchema: AnpassungSchema,
+  CustomSchema: Schema,
 
   components: {
     AccountIcon,
@@ -1097,11 +1546,7 @@ export default {
     ContentSaveIcon,
     PrinterIcon,
 
-    AnpassungUeber
-  },
-
-  props: {
-    msg: String
+    'CustomUeber': Ueber,
   },
 
   data() {
@@ -1109,17 +1554,39 @@ export default {
       wepFile: null,
       wepDateiname: "",
       wepDateinameModified: false,
+      einstellungenEinklappen: false,
       preisAnzeigen: true,
-      schnellAnzeigen: false,
       result: '',
       helper_breite: 0,
       helper_laenge: 0,
-      schema: [],
       gliederung: [],
+
+      custom: {
+        Konfigurierbar: false,
+          // false: Konfiguration ist unveränderlich
+          // true:  Konfiguration zur Laufzeit ist möglich
+        EingabeArt: 1,
+          // 1: hierarchisches Formular
+          // 2: Combobox
+          // 3: editierbare Liste (TODO)
+        AdressEingabe: false,
+          // false: Adresse des Eigentümers wird nicht erfasst
+          // true:  Adresse des Eigentümers wird erfasst
+        ZustandsArray: false,
+          // false: Gebäudezustand als einfache Zeichenkette
+          // true:  Gebäudezustand als Array
+        Anmerkungen: false,
+          // false: nur Gesamtbewertung
+          // true:  zusätzliche Anmerkungen zur Gesamtbewertung
+        Siegel: false,
+          // false: Protokoll ohne Siegel
+          // true:  Protokoll mit Siegel
+      },
 
       inputNichtBewertet: {name:""},
       inputAuflagen: {name:"", preis:0},
       wep: {
+        methode: 0, // 0 fixer Grundpreis, 1 Grundpreisspanne, 2 Koch
         grunddaten: {
           verband: "",
           anlage: "",
@@ -1131,6 +1598,7 @@ export default {
           ort: "",
           anwesend: "",
           datum: "",
+          zinssatz: 4.0,
         },
         gebaeude: [], /* will be filled with einGebaeude */
         baukostenindex: 0,
@@ -1143,6 +1611,15 @@ export default {
         anmerkungen: "",
         leistungen: 0,
       },
+      vorschlagZustand: [],
+      vorschlagNichtBewertet: [],
+      vorschlagAuflagen: [],
+      textMinderungsgrund: [
+        "Art/Standort/Wachstum",
+        "Erziehungsfehler",
+        "Pflegemängel",
+        "weitere",
+      ],
       einGebaeude: "",
       templateGebaeude: {
         einklappen: false,
@@ -1151,16 +1628,15 @@ export default {
         abschreibungssatz: 2.00,
         prozentualerRestwert: 0,
         flaeche: 0,
-        flaeche_bem: "",
+        flaecheZuviel: "",
         hoehe: 0,
-        baujahr: 1950,
+        baujahr: 2000,
         ausstattung: [],
         fenster: 0,
         tueren: 0,
-        zustand: [],
-        inputZustand: ""
+        zustand: "",
+        zustandArray: [],
       },
-
       einFreisitz: `{
         "einklappen": false,
         "art": "Freisitz",
@@ -1168,10 +1644,10 @@ export default {
         "abschreibungssatz": 2.00,
         "prozentualerRestwert": 0,
         "flaeche": 0,
-        "baujahr": 1950,
+        "baujahr": 2000,
         "einbezogen": false,
-        "zustand": [],
-        "inputZustand": ""
+        "zustand": "",
+        "zustandArray": []
       }`,
     }
   },
@@ -1180,9 +1656,13 @@ export default {
   mounted() {
 
     // benutzerdefiniertes Schema einlesen
-    this.gliederung = this.$options.mySchema.gliederung;
-    this.templateGebaeude.ausstattung = this.$options.mySchema.ausstattung;
+    this.gliederung             = this.$options.CustomSchema.gliederung;
+    this.templateGebaeude.ausstattung = this.$options.CustomSchema.ausstattung;
     this.einGebaeude = JSON.stringify(this.templateGebaeude);
+    this.vorschlagZustand       = this.$options.CustomSchema.vorschlagZustand;
+    this.vorschlagNichtBewertet = this.$options.CustomSchema.vorschlagNichtBewertet;
+    this.vorschlagAuflagen      = this.$options.CustomSchema.vorschlagAuflagen;
+    this.custom                 = this.$options.CustomSchema.custom;
 
     // set datum datepicker to current date
     const today = new Date();
@@ -1290,6 +1770,12 @@ export default {
         menge:1,
         minderung:0,
         kriterien:"",
+        pflanzung:35,
+        pflege:30,
+        anwachsrisiko:5,
+        alterswertminderung:0,
+        herstellungsdauer:10,
+        minderungsgruende:[],
       });
     },
 
@@ -1342,22 +1828,6 @@ export default {
       }
     },
 
-    setVariante(neu, nebenanlage, name) {
-      neu.name = name;
-      let i = nebenanlage.options.findIndex(el => (el == name));
-      if (i >= 0) {
-        neu.iwmin = nebenanlage.iwmin[i];
-        neu.iwmax = nebenanlage.iwmax[i];
-        neu.iwstep = this.stepOneOrHalf(neu.iwmin, neu.iwmax);
-        neu.grundpreis = nebenanlage.grundpreis[i];
-      } else {
-        neu.iwmin = 0;
-        neu.iwmax = 0;
-        neu.iwstep = 1;
-        neu.grundpreis = 0;
-      }
-    },
-
     wertVorhanden(v) {
       return Math.round(v.grundpreis*v.menge*(100-v.minderung)) / 100;
     },
@@ -1371,9 +1841,9 @@ export default {
     },
 
     addGebaeudeZustand(gebaeude) {
-        if (gebaeude.inputZustand) {
-            gebaeude.zustand.push(gebaeude.inputZustand);
-            gebaeude.inputZustand = "";
+        if (gebaeude.zustand) {
+            gebaeude.zustandArray.push(gebaeude.zustand);
+            gebaeude.zustand = "";
         }
     },
 
@@ -1432,28 +1902,34 @@ export default {
     addGebaeude(art) {
       let dazu = JSON.parse(this.einGebaeude);
       dazu.art = art;
-      const today = new Date();
-      dazu.baujahr = today.getFullYear() - 50;
+
+      // Starte mit 50 Jahre altem Gebäude
+      //const today = new Date();
+      //dazu.baujahr = today.getFullYear() - 50;
+
       this.wep.gebaeude.push(dazu)
     },
 
-    wepGenerieren(mystil, drucken) {
-      const ProtokollClass = Vue.extend(Protokoll);
+    wepGenerieren(drucken) {
+      const ProtokollClass = Vue.extend(this.wep.methode==2 ? ProtokollKoch
+                                                            : Protokoll);
 
       const rendered = new ProtokollClass({
+        propsData: {
+          custom: this.custom,
+        },
         data: () => {
           return {
             wep: this.wep,
-            stil: mystil
           }
         }
       }).$mount().$el.outerHTML;
 
-      var frog = window.open("","Wertermittlungsprotokoll");
-      frog.document.open();
-      frog.document.write(rendered);
-      frog.document.close();
-      if (drucken) frog.print();
+      var win = window.open("","Wertermittlungsprotokoll");
+      win.document.open();
+      win.document.write(rendered);
+      win.document.close();
+      if (drucken) win.onload = function() { win.print(); }
     },
 
     gesamtAbschreibung(jahr, satz) {
@@ -1467,13 +1943,15 @@ export default {
     },
 
     restwert: function(g) {
-      return Math.round(g.prozentualerRestwert * this.neuwert(g)) / 100;
+      const r = Math.round(g.prozentualerRestwert * this.neuwert(g)) / 100;
+      return (g.art=='Schaden') ? (-r) : r;
     },
 
     zeitwert: function(g) {
       const neuwert = this.neuwert(g);
       const abschreibung = this.gesamtAbschreibung(g.baujahr, g.abschreibungssatz);
-      return Math.round(neuwert * (100-abschreibung)) / 100;
+      const r = Math.round(neuwert * (100-abschreibung)) / 100;
+      return (g.art=='Schaden') ? (-r) : r;
     },
 
     onBerechnungshilfeClose() {
@@ -1487,6 +1965,81 @@ export default {
     formatEuro: function(x) {
         return new Intl.NumberFormat('de-DE', {style: 'currency', currency: 'EUR'}).format(x);
     },
+
+
+
+
+    /* Methode Koch */
+
+    gehoelzpreis: function(v) {
+      return v.menge * v.grundpreis; // * 1.19;
+    },
+
+    preisPflanzung: function(v) {
+      return v.pflanzung * this.gehoelzpreis(v) * 0.01;
+    },
+
+    kostenInvestition: function(v) {
+      return this.gehoelzpreis(v) + this.preisPflanzung(v);
+    },
+
+    pflegeProJahr: function(v) {
+      return v.pflege * this.preisPflanzung(v) * 0.01;
+    },
+
+    zinsProJahr: function(v) {
+      return this.wep.grunddaten.zinssatz * this.kostenInvestition(v) * 0.01;
+    },
+
+    kapitalendwertfaktor: function(jahre) {
+      return Math.pow((this.wep.grunddaten.zinssatz * 0.01) + 1, jahre);
+    },
+
+    rentenendwertfaktor: function(jahre) {
+      return (100 * (this.kapitalendwertfaktor(jahre) - 1)) 
+        / this.wep.grunddaten.zinssatz;
+    },
+
+    kostenAnwuchsphase: function(v) {
+      return (this.pflegeProJahr(v) + this.zinsProJahr(v))
+        * this.rentenendwertfaktor(3);
+    },
+
+    preisAnwachsrisiko: function(v) {
+      return v.anwachsrisiko * (this.kostenInvestition(v) + this.kostenAnwuchsphase(v)) * 0.01;
+    },
+
+    preisAngewachsen: function(v) {
+      return this.kostenInvestition(v) + this.kostenAnwuchsphase(v) + this.preisAnwachsrisiko(v);
+    },
+
+    zinsAngewachsen: function(v) {
+      return this.preisAngewachsen(v) * this.kapitalendwertfaktor(v.herstellungsdauer);
+    },
+
+    preisHerstellung: function(v) {
+      return this.pflegeProJahr(v) * 0.3 * this.rentenendwertfaktor(v.herstellungsdauer);
+    },
+
+    gesamtherstellungskosten: function(v) {
+      return this.zinsAngewachsen(v) + this.preisHerstellung(v);
+    },
+
+    preisAlterswertminderung: function(v) {
+      return v.alterswertminderung * this.gesamtherstellungskosten(v) * 0.01;
+    },
+
+    preisMinderung: function(v) {
+      return v.minderung * (this.gesamtherstellungskosten(v) - this.preisAlterswertminderung(v)) * 0.01;
+    },
+
+    sachwertZumStichtag: function(v) {
+        if (v.summentyp==1) /* Nebenanlagen und Bodenverbesserung */
+            return (v.menge * v.grundpreis * (100-v.minderung) * 0.01);
+        if (v.summentyp==5) /* Rasen und Beete */
+            return (v.menge * v.grundpreis * (100+v.pflanzung) * (100-v.minderung) * 0.0001);
+      return this.gesamtherstellungskosten(v) - this.preisAlterswertminderung(v) - this.preisMinderung(v);
+    }
 
   },
 
@@ -1523,6 +2076,7 @@ export default {
     },
 
     warnNHW() {
+      if (this.wep.methode == 2) return false; // bei Koch ist NHW nicht begrenzt
       return this.wep.gebaeude.reduce(
         (acc, g) => acc || g.normalherstellungswert>26.0,
         false);
@@ -1656,6 +2210,27 @@ export default {
         - this.summeAuflagen;
       return sum;
     },
+
+
+
+
+    /* Methode Koch */
+
+    summeKulturenKoch : function() {
+      return this.wep.vorhanden[1].reduce((acc, v) => acc + this.sachwertZumStichtag(v), 0);
+    },
+
+    summeZierKoch : function() {
+      return this.wep.vorhanden[2].reduce((acc, v) => acc + this.sachwertZumStichtag(v), 0);
+    },
+
+    entschaedigungKoch : function () {
+      return this.gesamtsummeBau
+        + this.summeNebenanlagen
+        + this.summeKulturenKoch
+        + this.summeZierKoch;
+    },
+
 
   }
 }
