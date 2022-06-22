@@ -20,3 +20,7 @@ Favicons aus den Logos erstellen:
     rm public/img/icons/manifest.json
     mv public/img/icons/favicon.ico public/
 
+PWA unter localhost:8080 testen:
+
+    npm run build
+    npx http-server dist

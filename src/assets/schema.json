@@ -809,6 +809,7 @@
   ],
   "custom": {
     "Konfigurierbar": false,
+    "SchnellEingabeIcon": false,
     "EingabeArt": 1,
     "AdressEingabe": false,
     "ZustandsArray": false,

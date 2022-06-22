@@ -43,7 +43,8 @@
                         title="Zierbegrünung">
               <BarleyIcon/>
             </b-nav-item>
-            <b-nav-item v-on:click="custom.EingabeArt = 3-custom.EingabeArt"
+            <b-nav-item v-if="custom.SchnellEingabeIcon"
+                        v-on:click="custom.EingabeArt = 3-custom.EingabeArt"
                         v-b-tooltip.hover.v-secondary>
               <BikeFastIcon/>
             </b-nav-item>
@@ -187,29 +188,36 @@
 
       <div class="mb-2 bg-light pl-2 pr-2 pt-2 pb-2">
       <b-row class="mt-1">
-        <b-col sm="3">Stadt-/Ortsverband</b-col>
-        <b-col sm="9"><b-form-input type="text" v-model="wep.grunddaten.verband" /></b-col>
+        <b-col sm="3"><label for="input-verband">Stadt-/Ortsverband</label></b-col>
+        <b-col sm="9"><b-form-input type="text" v-model="wep.grunddaten.verband" id="input-verband"/></b-col>
       </b-row>
       <b-row class="mt-2">
-        <b-col sm="3">Kleingartenanlage</b-col>
+        <b-col sm="3"><label for="input-anlage">Kleingartenanlage</label></b-col>
         <b-col sm="9">
-          <b-form-input type="text" v-model="wep.grunddaten.anlage"/>
+          <b-form-input type="text" v-model="wep.grunddaten.anlage" id="input-anlage"/>
         </b-col>
       </b-row>
       <b-row class="mt-2">
-        <b-col sm="3">Parzellen-Nummer</b-col>
+        <b-col sm="3"><label for="input-parzelle">Parzellen-Nummer</label></b-col>
         <b-col sm="4">
-          <b-form-input type="text" v-model="wep.grunddaten.parzellennummer"/>
+          <b-form-input type="text" v-model="wep.grunddaten.parzellennummer" id="input-parzelle"/>
         </b-col>
       </b-row>
       <b-row class="mt-2">
-        <b-col sm="3">Parzellen-Fläche</b-col>
-        <b-col sm="4"><b-form-input type="number" min="0" v-model.number="wep.grunddaten.parzellenflaeche"/></b-col>
+        <b-col sm="3"><label for="input-parzellenflaeche">Parzellen-Fläche</label></b-col>
+        <b-col sm="4">
+          <b-form-input type="number"
+                        min="0"
+                        v-model.number="wep.grunddaten.parzellenflaeche"
+                        id="input-parzellenflaeche"/>
+        </b-col>
         <b-col sm="1">m²</b-col>
       </b-row>
       <b-row class="mt-2">
-        <b-col sm="3">Pächter/in</b-col>
-        <b-col sm="4"><b-form-input type="text" v-model="wep.grunddaten.paechtername"/></b-col>
+        <b-col sm="3"><label for="input-paechtername">Pächter/in</label></b-col>
+        <b-col sm="4">
+          <b-form-input type="text" v-model="wep.grunddaten.paechtername" id="input-paechtername"/>
+        </b-col>
         <b-col sm="5">
           <b-form-checkbox v-model="wep.grunddaten.paechteranwesend">
             anwesend bei Begehung
@@ -218,23 +226,44 @@
       </b-row>
       <template v-if="custom.AdressEingabe">
         <b-row class="mt-2">
-          <b-col sm="3">Straße</b-col>
-          <b-col sm="9"><b-form-input type="text" v-model="wep.grunddaten.strasse"/></b-col>
+          <b-col sm="3"><label for="input-strasse">Straße</label></b-col>
+          <b-col sm="9">
+            <b-form-input type="text"
+                          v-model="wep.grunddaten.strasse"
+                          id="input-strasse"/>
+          </b-col>
         </b-row>
         <b-row class="mt-2">
-          <b-col sm="3">Wohnort</b-col>
-          <b-col sm="9"><b-form-input type="text" v-model="wep.grunddaten.ort"/></b-col>
+          <b-col sm="3"><label for="input-wohnort">Wohnort</label></b-col>
+          <b-col sm="9">
+            <b-form-input type="text"
+                          v-model="wep.grunddaten.ort"
+                          id="input-wohnort"/>
+          </b-col>
         </b-row>
       </template>
       <b-row class="mt-2">
-        <b-col sm="3">Weitere Teilnehmer</b-col>
-        <b-col sm="9"><b-form-input type="text" v-model="wep.grunddaten.anwesend"/></b-col>
+        <b-col sm="3">
+          <label for="input-teilnehmer">
+            Weitere Teilnehmer
+          </label>
+        </b-col>
+        <b-col sm="9">
+          <b-form-input type="text"
+                        v-model="wep.grunddaten.anwesend"
+                        id="input-teilnehmer"/>
+        </b-col>
       </b-row>
       <b-row class="mt-2">
-        <b-col sm="3">Datum</b-col>
+        <b-col sm="3">
+          <label for="input-bewertungsdatum">
+            Datum
+          </label>
+        </b-col>
         <b-col sm="9">
           <b-form-datepicker v-model="wep.grunddaten.datum"
-            id="Bewertungsdatum"
+            id="input-bewertungsdatum"
+            label-selected="Bewertungsdatum"
             aria-label="ARIA-LABEL wird nicht übernommen">
           </b-form-datepicker>
         </b-col>
@@ -248,10 +277,17 @@
         <b-col sm="1">%</b-col>
       </b-row>
       <b-row class="mt-2 mb-1">
-        <b-col sm="3">Dateiname</b-col>
-        <b-col sm="6"><b-form-input type="text"
-                                    :value="getDateiname"
-                                    @input="setDateiname" /></b-col>
+        <b-col sm="3">
+          <label for="input-dateiname">
+            Dateiname
+          </label>
+        </b-col>
+        <b-col sm="6">
+          <b-form-input type="text"
+                        :value="getDateiname"
+                        @input="setDateiname"
+                        id="input-dateiname" />
+        </b-col>
         <b-col sm="3">
           <b-button variant="primary"
                     block
@@ -299,8 +335,17 @@
         <div class="mb-3 bg-light pl-2 pr-2 pt-2" v-if="!g.einklappen">
           <template v-if="g.art=='Freisitz' || g.art=='Renovierung' || g.art=='Schaden'">
             <b-row class="mt-2">
-              <b-col sm="3"> Fläche</b-col>
-              <b-col sm="2"> <b-form-input type="number" min="0" step="any" v-model.number="g.flaeche"/></b-col>
+              <b-col sm="3">
+                <label :for="`input-flaeche-g${gi}`">
+                  Fläche
+                </label>
+              </b-col>
+              <b-col sm="2">
+                <b-form-input type="number"
+                              min="0" step="any"
+                              v-model.number="g.flaeche"
+                              :id="`input-flaeche-g${gi}`"/>
+              </b-col>
               <b-col sm="1"> m² </b-col>
               <template v-if="g.art=='Freisitz'">
                 <b-col sm="6">
@@ -310,8 +355,17 @@
               </template>
             </b-row>
             <b-row class="mt-2">
-              <b-col sm="3">Baujahr</b-col>
-              <b-col sm="2"><b-form-input type="number" min="0" v-model.number="g.baujahr"/></b-col>
+              <b-col sm="3">
+                <label :for="`input-baujahr-g${gi}`">
+                  Baujahr
+                </label>
+              </b-col>
+              <b-col sm="2">
+                <b-form-input type="number"
+                              min="0"
+                              v-model.number="g.baujahr"
+                              :id="`input-baujahr-g${gi}`"/>
+              </b-col>
               <b-col sm="4">
                 (Alter: {{wep.grunddaten.datum.substring(0,4)-g.baujahr}} Jahre)
               </b-col>
@@ -331,17 +385,32 @@
 
           <template v-else>
             <b-row class="mt-2 mb-1">
-              <b-col sm="2"> Grundfläche </b-col>
-              <b-col sm="2"> 
-                <b-form-input type="number" min="0" step="any" v-model.number="g.flaeche"
-                              v-b-tooltip.hover title="Außenkante x Außenkante Wand" />
+              <b-col sm="2">
+                <label :for="`input-flaeche-g${gi}`">
+                  Grundfläche
+                </label>
+              </b-col>
+              <b-col sm="2">
+                <b-form-input type="number"
+                              min="0" step="any" v-model.number="g.flaeche"
+                              v-b-tooltip.hover 
+                              title="Außenkante x Außenkante Wand"
+                              :id="`input-flaeche-g${gi}`" />
               </b-col>
               <b-col sm="1"> m² </b-col>
               <b-col sm="2"></b-col>
-              <b-col sm="2"> unberücksichtigt </b-col>
+              <b-col sm="2">
+                <label :for="`input-unberuecksichtigt-g${gi}`">
+                  unberücksichtigt
+                </label>
+              </b-col>
               <b-col sm="2"> 
-                <b-form-input type="number" min="0" step="any" v-model.number="g.flaecheZuviel"
-                              v-b-tooltip.hover title="nur 24m² dürfen berücksichtigt weden" />
+                <b-form-input type="number"
+                              min="0" step="any"
+                              v-model.number="g.flaecheZuviel"
+                              v-b-tooltip.hover
+                              title="nur 24m² dürfen berücksichtigt weden"
+                              :id="`input-unberuecksichtigt-g${gi}`" />
               </b-col>
               <b-col sm="1"> m² </b-col>
 <!--
@@ -367,34 +436,75 @@
                        Die unberücksichtigte Fläche können Sie im Ergänzungsfeld vermerken.
             </b-alert>
             <b-row class="mt-1 mb-1">
-              <b-col sm="2"> Höhe </b-col>
-              <b-col sm="2"> <b-form-input type="number" step="any" min="0.0" v-model.number="g.hoehe"/> </b-col>
+              <b-col sm="2">
+                <label :for="`input-hoehe-g${gi}`">
+                  Höhe
+                </label>
+              </b-col>
+              <b-col sm="2">
+                <b-form-input type="number"
+                              step="any" min="0.0"
+                              v-model.number="g.hoehe"
+                              :id="`input-hoehe-g${gi}`"/>
+              </b-col>
               <b-col sm="8"> m </b-col>
             </b-row>
             <b-row class="mt-1 mb-1">
-              <b-col sm="2"> Baujahr </b-col>
               <b-col sm="2">
-                <b-form-input type="number" min="0" v-model.number="g.baujahr"/> </b-col>
+                <label :for="`input-baujahr-g${gi}`">
+                  Baujahr
+                </label>
+              </b-col>
+              <b-col sm="2">
+                <b-form-input type="number"
+                              min="0"
+                              v-model.number="g.baujahr"
+                              :id="`input-baujahr-g${gi}`"/>
+              </b-col>
               <b-col sm="4">
                 (Alter: {{wep.grunddaten.datum.substring(0,4)-g.baujahr}} Jahre)
               </b-col>
             </b-row>
 
             <b-row class="mt-1 mb-1" v-for="(a, ai) in g.ausstattung" :key="ai">
-              <b-col sm="2"> {{ a.name }} </b-col>
+              <b-col sm="2">
+                <label :for="`input-ausstattung-${gi}-${ai}`">
+                  {{ a.name }}
+                </label>
+              </b-col>
               <b-col sm="8">
                 <b-form-checkbox-group v-model="a.selected" :options="a.options"/>
               </b-col>
-              <b-col sm="2"> <b-form-input v-model="a.ergaenzung"/> </b-col>
+              <b-col sm="2">
+                <b-form-input v-model="a.ergaenzung" :id="`input-ausstattung-${gi}-${ai}`"/>
+               </b-col>
             </b-row>
 
             <b-row class="mt-2">
-              <b-col sm="2"> Anzahl Fenster</b-col>
-              <b-col sm="2"> <b-form-input type="number" min="0" v-model.number="g.fenster"/> </b-col>
+              <b-col sm="2">
+                <label :for="`input-fenster-g${gi}`">
+                  Anzahl Fenster
+                </label>
+              </b-col>
+              <b-col sm="2">
+                <b-form-input type="number"
+                              min="0"
+                              v-model.number="g.fenster"
+                              :id="`input-fenster-g${gi}`"/>
+              </b-col>
             </b-row>
             <b-row class="mt-2">
-              <b-col sm="2"> Anzahl Türen </b-col>
-              <b-col sm="2"> <b-form-input type="number" min="0" v-model.number="g.tueren"/> </b-col>
+              <b-col sm="2">
+                <label :for="`input-tueren-g${gi}`">
+                  Anzahl Türen
+                </label>
+              </b-col>
+              <b-col sm="2">
+                <b-form-input type="number"
+                              min="0"
+                              v-model.number="g.tueren"
+                              :id="`input-tueren-g${gi}`"/>
+                </b-col>
             </b-row>
           </template>
 
@@ -499,8 +609,17 @@
 
       <div class="mb-2 bg-light pl-2 pr-2 pt-2 pb-2">
         <b-row class="mt-2">
-          <b-col sm="2">Baukostenindex</b-col>
-          <b-col sm="3"><b-form-input type="number" min="0" step="any" v-model.number="wep.baukostenindex"/></b-col>
+          <b-col sm="2">
+            <label for="input-baukostenindex">
+              Baukostenindex
+            </label>
+          </b-col>
+          <b-col sm="3">
+            <b-form-input type="number"
+                          min="0" step="any"
+                          v-model.number="wep.baukostenindex"
+                          id="input-baukostenindex"/>
+          </b-col>
         </b-row>
 
         <!-- Neuwert -->
@@ -512,15 +631,23 @@
         </b-row>
         <b-row class="mb-2" v-for="(g2, g2i) in wep.gebaeude" :key="g2i">
           <b-col sm="2">
-            {{ g2.art }}
+            <label :for="`input-nhw-g${g2i}`">
+              {{ g2.art }}
+            </label>
           </b-col>
           <b-col sm="3">
             <!-- NHW ist bei Koch unbegrenzt -->
             <template v-if="wep.methode==2">
-              <b-form-input type="number" min="0" step="any" v-model.number="g2.normalherstellungswert"/>
+              <b-form-input type="number"
+                            min="0" step="any"
+                            v-model.number="g2.normalherstellungswert"
+                            :id="`input-nhw-g${g2i}`"/>
             </template>
             <template v-else>
-              <b-form-input type="number" min="0" max="26.0" step="any" v-model.number="g2.normalherstellungswert"/>
+              <b-form-input type="number"
+                            min="0" max="26.0" step="any"
+                            v-model.number="g2.normalherstellungswert"
+                            :id="`input-nhw-g${g2i}`"/>
             </template>
           </b-col>
           <b-col sm="1">€/m²</b-col>
@@ -571,7 +698,11 @@
           </b-col>
         </b-row>
           <b-row v-for="(g3, g3i) in wep.gebaeude" :key="g3i">
-            <b-col sm="2">{{ g3.art }}</b-col>
+            <b-col sm="2">
+              <label :for="`input-abschreibungssatz-g${g3i}`">
+                {{ g3.art }}
+              </label>
+            </b-col>
             <b-col sm="3" class="text-center">
 <!--
               <b-input-group>
@@ -582,7 +713,10 @@
                 </b-input-group-append>
               </b-input-group>
 -->
-              <b-form-input type="range" min="2" max="5" step="0.01" v-model="g3.abschreibungssatz"/>
+              <b-form-input type="range"
+                            min="2" max="5" step="0.01"
+                            v-model="g3.abschreibungssatz"
+                            :id="`input-abschreibungssatz-g${g3i}`"/>
             </b-col>
             <b-col sm="5">
               <b-row>
@@ -708,7 +842,7 @@
 
           <template v-for="(v, vi) in wep.vorhanden[level1i]">
             <div v-if="v.level2i==level2i" class="mb-3 bg-light pl-2 pr-2 pt-2" :key="vi">
-              <b-row>
+              <b-row v-if="level2.sub">
                 <b-col sm="12">
                   <b-form-group class="m-1">
                     <b-form-radio-group
@@ -726,11 +860,17 @@
               <b-row align-v="center">
                 <b-col sm="2">
                   <b-row align-v="center">
-                    <b-col sm="8 pr-0">
-                      <b-form-input type="number" min="0" step="any" v-model.number="v.menge"/>
+                    <b-col sm="8">
+                      <b-form-input type="number"
+                                    min="0"
+                                    step="any"
+                                    v-model.number="v.menge"
+                                    :id="`input-einheit-${level1i}-${vi}`"/>
                     </b-col>
-                  <b-col sm="4 pl-1 text-left">
-                      {{ v.einheit }}
+                    <b-col sm="4 pl-1 text-left">
+                      <label :for="`input-einheit-${level1i}-${vi}`">
+                        {{ v.einheit }}
+                      </label>
                     </b-col>
                   </b-row>
                 </b-col>
@@ -813,34 +953,39 @@
                   -- Methode einfach: fester Grundpreis
                   -- ----------------------------------------------- -->
                 <template v-if="wep.methode==0">
-                <b-col sm="2 text-center">
-                  {{ v.minderung }} %
-                  <b-form-input type="range" min="0" max="100" v-model.number="v.minderung"/>
-                </b-col>
-                <template v-if="preisAnzeigen">
-                  <b-col sm="5">
-                    <b-form-input type="text"
-                                  v-model="v.kriterien"
-                                  :placeholder="level1.kriterien" />
+                  <b-col sm="2" class="text-center">
+                    <label :for="`input-minderung-${level1i}-${vi}`">
+                      {{ v.minderung }} %
+                    </label>
+                    <b-form-input type="range" 
+                                  min="0" max="100"
+                                  v-model.number="v.minderung"
+                                  :id="`input-minderung-${level1i}-${vi}`"/>
                   </b-col>
-                  <b-col sm="1" class="text-right">
-                    {{ (Math.round(v.menge * v.grundpreis * (100-v.minderung))/100).toFixed(2) }}
-                  </b-col>
-                </template>
-                <template v-else>
-                  <b-col sm="6">
-                    <b-form-input type="text"
-                                  v-model="v.kriterien"
-                                  :placeholder="level1.kriterien" />
-                  </b-col>
-                </template>
+                  <template v-if="preisAnzeigen">
+                    <b-col sm="5" class="mt-2">
+                      <b-form-input type="text"
+                                    v-model="v.kriterien"
+                                    :placeholder="level1.kriterien" />
+                    </b-col>
+                    <b-col sm="1" class="text-right">
+                      {{ (Math.round(v.menge * v.grundpreis * (100-v.minderung))/100).toFixed(2) }}
+                    </b-col>
+                  </template>
+                  <template v-else>
+                    <b-col sm="6" class="mt-4">
+                      <b-form-input type="text"
+                                    v-model="v.kriterien"
+                                    :placeholder="level1.kriterien" />
+                    </b-col>
+                  </template>
 
-                <b-col sm="2 text-right">
-                  <b-button variant="danger" size="sm"
-                            v-on:click="wep.vorhanden[level1i].splice(vi, 1)">
-                  <b-icon-x />Löschen
-                  </b-button>
-                </b-col>
+                  <b-col sm="2 text-right">
+                    <b-button variant="danger" size="sm"
+                              v-on:click="wep.vorhanden[level1i].splice(vi, 1)">
+                    <b-icon-x />Löschen
+                    </b-button>
+                  </b-col>
 
                 </template>
               </b-row>
@@ -961,7 +1106,7 @@
       <b-container :id="'gliederung'+i" v-for="(l, i) in gliederung" :key="i">
         <h2>{{ l.name }}</h2>
 
-        <b-row class="bg-gradient-secondary mr-0 mt-2 pt-1 pb-1">
+        <b-row class="bg-gradient-secondary mr-0 mt-2 mb-2 pt-1 pb-1">
           <b-col sm="1" class="mt-1">
             <b-button variant="primary" size="sm" aria-label="Ein/Ausklappen"
               v-on:click="l.einklappen = !l.einklappen">
@@ -1017,7 +1162,7 @@
                   </b-col>
                   <b-col sm="2">
                     <b-row>
-                      <b-col sm="8" class="pr-0">
+                      <b-col sm="8">
                         <b-form-input type="number" min="0" step="any" v-model.number="v.menge"/>
                       </b-col>
                       <b-col sm="4" class=" pl-1 text-left">
@@ -1091,7 +1236,7 @@
                   </b-col>
                   <b-col sm="2">
                     <b-row>
-                      <b-col sm="8" class="pr-0">
+                      <b-col sm="8">
                         <b-form-input type="number" min="0" step="any" v-model.number="v.menge"/>
                       </b-col>
                       <b-col sm="4" class=" pl-1 text-left">
@@ -1139,7 +1284,7 @@
                   <b-col sm="3" class="text-right">Herstellungsdauer</b-col>
                   <b-col sm="2">
                     <b-row>
-                      <b-col sm="8" class="pr-0">
+                      <b-col sm="8">
                         <b-form-input type="number" min="0" step="any" v-model.number="v.herstellungsdauer"/>
                       </b-col>
                       <b-col sm="4" class=" pl-1 text-left">Jahre</b-col>
@@ -1186,7 +1331,7 @@
             </b-col>
             <b-col sm="2">
               <b-row>
-                <b-col sm="8" class="pr-0">
+                <b-col sm="8">
                   <b-form-input type="number" min="0" step="any" v-model.number="v.menge"/>
                 </b-col>
                 <b-col sm="4" class=" pl-1 text-left">
@@ -1235,7 +1380,7 @@
               </b-col>
               <b-col sm="2">
                 <b-row>
-                  <b-col sm="8" class="pr-0">
+                  <b-col sm="8">
                     <b-form-input type="number" min="0" step="any" v-model.number="v.menge"/>
                   </b-col>
                   <b-col sm="4" class=" pl-1 text-left">
@@ -1286,15 +1431,19 @@
 
       <b-row class="bg-gradient-secondary mr-0 mt-2 pt-1 pb-1">
         <b-col sm="1"></b-col>
-        <b-col sm="11">Nicht bewertete Anlagen</b-col>
+        <b-col sm="11">
+          <label for="input-nicht">Nicht bewertete Anlagen</label>
+        </b-col>
       </b-row>
       <div class="mb-3 bg-light pl-2 pr-2 pt-2">
         <b-row class="pb-1">
-          <b-col sm="10">
-            <b-form-input list="list-nicht" v-model="inputNichtBewertet.name"></b-form-input>
-            <b-form-datalist id="list-nicht" :options="vorschlagNichtBewertet"></b-form-datalist>
+          <b-col sm="10" class="mt-2">
+            <b-form-input list="list-nicht"
+                          v-model="inputNichtBewertet.name"
+                          id="input-nicht"/>
+            <b-form-datalist id="list-nicht" :options="vorschlagNichtBewertet"/>
           </b-col>
-          <b-col sm="2" class="text-right">
+          <b-col sm="2" class="mt-2 text-right">
             <b-button variant="primary" size="sm"
               v-on:click="addNichtBewertet">
               <b-icon-plus />Hinzufügen
@@ -1303,7 +1452,7 @@
         </b-row>
         <b-row class="pb-1" v-for="(n, ni) in wep.nichtbewertet" :key="ni">
           <b-col sm="10"> {{ n.name }} </b-col>
-          <b-col sm="2" class="text-right">
+          <b-col sm="2" class="mt-2 text-right">
             <b-button variant="danger" size="sm"
                       v-on:click="wep.nichtbewertet.splice(ni, 1)">
               <b-icon-x />Löschen
@@ -1318,18 +1467,25 @@
 
       <b-row class="bg-gradient-secondary mr-0 mt-2 pt-1 pb-1">
         <b-col sm="1"></b-col>
-        <b-col sm="11">Auflagen</b-col>
+        <b-col sm="11"><label for="input-auflagen">Auflagen</label></b-col>
       </b-row>
       <div class="mb-3 bg-light pl-2 pr-2 pt-2">
         <b-row class="pb-1">
-          <b-col sm="8">
-            <b-form-input list="list-auflagen" v-model="inputAuflagen.name"></b-form-input>
-            <b-form-datalist id="list-auflagen" :options="vorschlagAuflagen"></b-form-datalist>
+          <b-col sm="7" class="mt-2">
+            <b-form-input list="list-auflagen"
+                          v-model="inputAuflagen.name"
+                          id="input-auflagen"/>
+            <b-form-datalist id="list-auflagen" :options="vorschlagAuflagen"/>
           </b-col>
-        <b-col sm="2" class="pr-0">
-          <b-form-input type="number" v-model.number="inputAuflagen.preis"/>
-        </b-col>
-          <b-col sm="2" class="text-right">
+          <b-col sm="2" class="mt-2">
+            <b-form-input type="number" 
+                          v-model.number="inputAuflagen.preis"
+                          id="input-auflagen-preis" />
+          </b-col>
+          <b-col sm="1" class="mt-2 text-left">
+            <label for="input-auflagen-preis">€</label>
+          </b-col>
+          <b-col sm="2" class="mt-2 text-right">
             <b-button variant="primary" size="sm"
               v-on:click="addAuflagen">
               <b-icon-plus />Hinzufügen
@@ -1339,7 +1495,7 @@
         <b-row class="pb-1" v-for="(a, ai) in wep.auflagen" :key="ai">
           <b-col sm="8"> {{ a.name }} </b-col>
           <b-col sm="2"> {{ a.preis }} €</b-col>
-          <b-col sm="2" class="text-right">
+          <b-col sm="2" class="mt-2 text-right">
             <b-button variant="danger" size="sm"
                       v-on:click="wep.auflagen.splice(ai, 1)">
               <b-icon-x />Löschen
@@ -1354,14 +1510,19 @@
 
       <b-row class="bg-gradient-secondary mr-0 mt-2 pt-1 pb-1">
         <b-col sm="1"></b-col>
-        <b-col sm="11">Gesamtbewertung</b-col>
+        <b-col sm="11">
+          <label for="input-gesamtbewertung">
+            Gesamtbewertung
+          </label>
+        </b-col>
       </b-row>
       <div class="mb-3 bg-light pl-2 pr-2 pt-2">
         <b-row class="mt-2 mb-2 pb-2">
           <b-col>
             <b-form-textarea placeholder="Gesamtbewertung des Gartens"
                              rows="4"
-                             v-model="wep.gesamtbewertung"/>
+                             v-model="wep.gesamtbewertung"
+                             id="input-gesamtbewertung"/>
           </b-col>
         </b-row>
       </div>
@@ -1369,14 +1530,19 @@
       <template v-if="custom.Anmerkungen">
         <b-row class="bg-gradient-secondary mr-0 mt-2 pt-1 pb-1">
           <b-col sm="1"></b-col>
-          <b-col sm="11">Anmerkungen</b-col>
+          <b-col sm="11">
+            <label for="input-anmerkungen">
+              Anmerkungen
+            </label>
+          </b-col>
         </b-row>
         <div class="mb-3 bg-light pl-2 pr-2 pt-2">
           <b-row class="mt-2 mb-2 pb-2">
             <b-col>
               <b-form-textarea placeholder="nur ausfüllen, falls notwendig"
                                rows="4"
-                               v-model="wep.anmerkungen"/>
+                               v-model="wep.anmerkungen"
+                               id="input-anmerkungen"/>
             </b-col>
           </b-row>
         </div>
@@ -1455,10 +1621,17 @@
           <b-col sm="7" class="text-right">{{ formatEuro(summeNebenanlagen) }}</b-col>
         </b-row>
         <b-row class="pt-2">
-          <b-col sm="3">Gärtnerische Kulturen</b-col>
+          <b-col sm="3">
+            <label for="input-minderung-kulturen">
+              Gärtnerische Kulturen
+            </label>
+          </b-col>
           <b-col sm="2" class="text-right">{{ formatEuro(summeKulturen) }}</b-col>
           <b-col sm="2" class="text-center">
-            <b-form-input type="range" min="0" max="100" v-model="wep.minderungKulturen"/>
+            <b-form-input type="range"
+                          min="0" max="100"
+                          v-model="wep.minderungKulturen"
+                          id="input-minderung-kulturen"/>
           </b-col>
           <b-col sm="1">
             {{ wep.minderungKulturen }} %
@@ -1468,10 +1641,13 @@
           </b-col>
         </b-row>
         <b-row class="pt-2">
-          <b-col sm="3">Zierbegrünung</b-col>
+          <b-col sm="3"><label for="input-minderung-zier">Zierbegrünung</label></b-col>
           <b-col sm="2" class="text-right">{{ formatEuro(gesamtsummeZier) }}</b-col>
           <b-col sm="2">
-            <b-form-input type="range" min="0" max="100" v-model="wep.minderungZier" />
+            <b-form-input type="range"
+                          min="0" max="100"
+                          v-model="wep.minderungZier"
+                          id="input-minderung-zier"/>
           </b-col>
           <b-col sm="1"> {{ wep.minderungZier }} % </b-col>
           <b-col sm="2" class="text-right">{{ formatEuro(geminderteZier) }}</b-col>
@@ -1481,9 +1657,13 @@
           <b-col sm="7" class="text-right">{{ formatEuro(-summeAuflagen) }}</b-col>
         </b-row>
         <b-row class="pt-2">
-          <b-col sm="8">Leistungen für die Erstellung von Gemeinschaftseinrichtungen</b-col>
+          <b-col sm="8">
+            <label for="input-leistungen">
+              Leistungen für die Erstellung von Gemeinschaftseinrichtungen
+            </label>
+          </b-col>
           <b-col sm="2">
-            <b-form-input type="number" v-model.number="wep.leistungen"/>
+            <b-form-input type="number" v-model.number="wep.leistungen" id="input-leistungen"/>
           </b-col>
         </b-row>
         <b-row class="pt-2 pb-2">
